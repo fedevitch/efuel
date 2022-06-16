@@ -8,7 +8,7 @@ const Map = dynamic(
 
 
 const Home: NextPage = () => {
-  return (<div className={styles.container}><Map/></div>)
+  return <Map/>
 }
 
 export default Home
