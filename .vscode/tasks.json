@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"path": "efuel",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build - efuel",
+			"detail": "next build"
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "efuel",
+			"problemMatcher": [],
+			"label": "npm: dev - efuel",
+			"detail": "next dev"
+		}
+	]
+}
