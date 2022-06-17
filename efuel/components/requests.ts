@@ -141,7 +141,8 @@ export const fetchUkrnafta = async(params: FetchParams):Promise<Array<FuelStatio
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        const response = ukrnafta as Array<UkrnaftaStation>
+        const res = await fetch('/api/ukrnafta')
+        const response =  (await res.json()) as Array<UkrnaftaStation>  
         
         response.filter(station => isInRange(params.range, params.location, {
             lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lon)
@@ -171,7 +172,8 @@ export const fetchUkrnafta = async(params: FetchParams):Promise<Array<FuelStatio
 
             }
         })
-    } catch {
+    } catch(e) {
+        console.log(e)
         console.error('Error while fetching data from Ukrnafta')
     }
 
