@@ -95,36 +95,38 @@ export const fetchSocar = async(params: FetchParams):Promise<Array<FuelStation>>
     const fuel_stations:Array<FuelStation> = []
 
     try {
-    const response = socar as SocarStations
-    
-    response.data
-            .filter(station => 
-                isInRange(params.range, params.location, { lat: station.attributes.marker.lat, lon: station.attributes.marker.lng }))
-            .forEach(station => {                
-                const push = () => {               
-                    fuel_stations.push(new FuelStation(station.attributes))
-                }
-                switch(params.fuelType){                
-                    case FuelTypes.A95:
-                        if(station.attributes.fuelPrices.some(price => price.includes('NANO 95') || price.includes('A95'))){
-                            push()                        
-                        }
-                        break
-                    case FuelTypes.DIESEL:
-                        if(station.attributes.fuelPrices.some(price => price.includes('NANO ДП') || price.includes('Diesel'))){
-                            push()                        
-                        }
-                        break 
-                    case FuelTypes.LPG:
-                        if(station.attributes.fuelPrices.some(price => price.includes('LPG'))){
-                            push()                        
-                        }
-                        break 
-                    default:
-                        break       
-    
-                }
-            })
+        // const response =  socar as SocarStations
+        const res = await fetch('https://socar.ua/api/map/stations')
+        const response =  (await res.json()) as SocarStations
+        
+        response.data
+                .filter(station => 
+                    isInRange(params.range, params.location, { lat: station.attributes.marker.lat, lon: station.attributes.marker.lng }))
+                .forEach(station => {                
+                    const push = () => {               
+                        fuel_stations.push(new FuelStation(station.attributes))
+                    }
+                    switch(params.fuelType){                
+                        case FuelTypes.A95:
+                            if(station.attributes.fuelPrices.some(price => price.includes('NANO 95') || price.includes('A95'))){
+                                push()                        
+                            }
+                            break
+                        case FuelTypes.DIESEL:
+                            if(station.attributes.fuelPrices.some(price => price.includes('NANO ДП') || price.includes('Diesel'))){
+                                push()                        
+                            }
+                            break 
+                        case FuelTypes.LPG:
+                            if(station.attributes.fuelPrices.some(price => price.includes('LPG'))){
+                                push()                        
+                            }
+                            break 
+                        default:
+                            break       
+        
+                    }
+                })
         } catch {
             console.error('Error while fetching data from Socar')
         }
