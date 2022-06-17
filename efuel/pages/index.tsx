@@ -8,10 +8,10 @@ const Map = dynamic(
 )
 
 import FuelStation, {FuelTypes} from '../models/fuelStation'
-import { fetchOkko } from '../components/requests'
+import { fetchOkko, fetchSocar, fetchWog } from '../components/requests'
 
 const params = {
-  range: 2, location: { lat: 49.7743, lon: 23.9602451 }, fuelType: FuelTypes.A95
+  range: 0.4, location: { lat: 49.783382, lon: 23.9957203 }, fuelType: FuelTypes.LPG
 }
 
 const Home: NextPage = () => {
@@ -19,8 +19,12 @@ const Home: NextPage = () => {
   const [stations, setStations] = useState([] as Array<FuelStation>);
 
   useEffect(() => {
-    Promise.all([fetchOkko(params)])
-    .then(([okko]) => { setStations([...okko]) })
+    Promise.all([
+      fetchOkko(params),
+      fetchWog(params),
+      fetchSocar(params)
+    ])
+    .then(([okko, wog, socar]) => { setStations([...okko, ...wog, ...socar]) })
 
   }, [])
 
