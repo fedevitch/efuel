@@ -4,8 +4,8 @@ import { UkrnaftaStation } from '../models/ukrnafta'
 import { SocarStations } from '../models/socar'
 
 /* temporary imports **/
-import okko from '../../api_responses/okko gas_stations.json'
-import socar from '../../api_responses/socar stations.json'
+// import okko from '../../api_responses/okko gas_stations.json'
+// import socar from '../../api_responses/socar stations.json'
 import wog from '../../api_responses/wog fuel_stations.json'
 import ukrnafta from '../../api_responses/ukrnafta response.json'
 /* remove after adding real api calls */
@@ -27,7 +27,9 @@ export const fetchOkko = async (params: FetchParams):Promise<Array<FuelStation>>
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        const response = okko as OkkoStation // request to okko
+        // const response = okko as OkkoStation // request to okko
+        const res = await fetch('https://www.okko.ua/api/uk/type/gas_stations')
+        const response =  (await res.json()) as OkkoStation
 
         response.collection
             .filter(station => {
