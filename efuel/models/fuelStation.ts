@@ -4,7 +4,7 @@ import { UkrnaftaStation } from '../models/ukrnafta'
 import { Attributes as SocarStation } from '../models/socar'
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -18,6 +18,8 @@ export default class FuelStation {
             this.fromWog(station as WogStation)
         } else if(this.isSocar()) {
             this.fromSocar(station as SocarStation)
+        } else if(this.isUkrnafta()){
+            this.fromUkrnafta(station as UkrnaftaStation)
         }
 
     }
@@ -44,7 +46,7 @@ export default class FuelStation {
         ${station.pulls95_tip_oplati ? ' PULLS95 ' : ''}
         ${station.dp_evro_tip_oplati ? ' DIESEL ' : ''}
         ${station.pullsdiesel_tip_oplati ? ' PULLS DIESEL ' : ''}
-        ${station.gas_tip_oplati ? ' LPG ' : ''}`
+        ${station.gas_tip_oplati ? ' LPG ' : ''}`;
     }
 
     private fromWog(station: WogStation){
@@ -63,6 +65,25 @@ export default class FuelStation {
         this.address = station.address;
         this.location = { lat: station.marker.lat, lon: station.marker.lng };
         this.fuelTypesAvailable = station.fuelPrices.join(',');
+    }
+
+    private fromUkrnafta(station: UkrnaftaStation){
+        this.brand = station.brand;
+        this.name = station.area_id;
+        this.address = station.addr;
+        this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lon) };
+        this.fuelTypesAvailable = `
+        A80:${station.a80}, 
+        A90:${station.a90}, 
+        A92:${station.a92}, 
+        A92E:${station.a92e}, 
+        A95:${station.a95}, 
+        A95E:${station.a95e}, 
+        E95S:${station.e95s}, 
+        Diesel:${station.dt}, 
+        DieselE:${station.dte}, 
+        LPG:${station.gas}
+        `;
     }
 }
 

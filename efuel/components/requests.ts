@@ -68,7 +68,7 @@ export const fetchOkko = async (params: FetchParams):Promise<Array<FuelStation>>
     return fuel_stations
 }
 
-export const fetchWog = async(params: FetchParams) => {
+export const fetchWog = async(params: FetchParams):Promise<Array<FuelStation>> => {
     const response = wog as WogStation // request to wog
     const fuel_stations:Array<FuelStation> = []
 
@@ -83,7 +83,7 @@ export const fetchWog = async(params: FetchParams) => {
     return fuel_stations
 }
 
-export const fetchSocar = async(params: FetchParams) => {
+export const fetchSocar = async(params: FetchParams):Promise<Array<FuelStation>> => {
     const response = socar as SocarStations
     const fuel_stations:Array<FuelStation> = []
 
@@ -118,4 +118,40 @@ export const fetchSocar = async(params: FetchParams) => {
             
     return fuel_stations        
 
+}
+
+export const fetchUkrnafta = async(params: FetchParams):Promise<Array<FuelStation>> => {
+    const response = ukrnafta as Array<UkrnaftaStation>
+    const fuel_stations:Array<FuelStation> = []
+
+    response.filter(station => isInRange(params.range, params.location, {
+        lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lon)
+    }))
+    .forEach(station => {                
+        const push = () => {               
+            fuel_stations.push(new FuelStation(station))
+        }
+        switch(params.fuelType){                
+            case FuelTypes.A95:
+                if(station.a95 !== "0.00" || station.a95e !== "0.00"){
+                    push()                        
+                }
+                break
+            case FuelTypes.DIESEL:
+                if(station.dt !== "0.00" || station.dte !== "0.00" ){
+                    push()                        
+                }
+                break 
+            case FuelTypes.LPG:
+                if(station.gas !== "0.00" ){
+                    push()                        
+                }
+                break 
+            default:
+                break       
+
+        }
+    })
+
+    return fuel_stations
 }
