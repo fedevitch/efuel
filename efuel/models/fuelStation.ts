@@ -2,6 +2,15 @@ import { CollectionAttributes as OKKO_station } from '../models/okko'
 import { Station as WogStation } from '../models/wog'
 import { UkrnaftaStation } from '../models/ukrnafta'
 import { Attributes as SocarStation } from '../models/socar'
+import L from 'leaflet'
+
+
+enum Brands {
+    Okko = "OKKO",
+    Wog = "WOG",
+    Socar = "Socar",
+    Ukrnafta = "Ukrnafta"
+}
 
 export default class FuelStation {
     constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation) {
@@ -37,7 +46,7 @@ export default class FuelStation {
     private isUkrnafta = () => this._stationRaw.hasOwnProperty('brand')
 
     private fromOkko(station: OKKO_station) {
-        this.brand = "OKKO";
+        this.brand = Brands.Okko;
         this.name = `${station.type_azk} ${station.Cod_AZK} ${station.Naselenyy_punkt}`;
         this.address = station.Adresa;
         this.location = { lat: station.coordinates.lat, lon: station.coordinates.lng };
@@ -50,7 +59,7 @@ export default class FuelStation {
     }
 
     private fromWog(station: WogStation){
-        this.brand = "WOG";
+        this.brand = Brands.Wog;
         this.name = station.name;
         this.address = station.city || "";
         this.location = {
@@ -60,7 +69,7 @@ export default class FuelStation {
     }
     
     private fromSocar(station: SocarStation){
-        this.brand = "Socar";
+        this.brand = Brands.Socar;
         this.name = station.title;
         this.address = station.address;
         this.location = { lat: station.marker.lat, lon: station.marker.lng };
@@ -68,8 +77,8 @@ export default class FuelStation {
     }
 
     private fromUkrnafta(station: UkrnaftaStation){
-        this.brand = station.brand;
-        this.name = station.area_id;
+        this.brand = Brands.Ukrnafta;
+        this.name = station.brand;
         this.address = station.addr;
         this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lon) };
         this.fuelTypesAvailable = `
@@ -103,3 +112,44 @@ const R = 6371
 
 export const AngleLatitude = (Latitude: number):number => (360 * Latitude) / (2 * Math.PI * R)
 export const Latitude = (AngleLatitude: number):number => Math.round((2 * Math.PI * R * AngleLatitude) / 360)
+
+// const okkoMarker = new L.Icon({
+//     iconUrl: '../public/okko-pin.png',
+//     iconRetinaUrl: '../public/okko-pin.png',
+//     iconSize: new L.Point(60, 75),
+//     className: 'leaflet-div-icon'
+// })
+
+// const wogMarker = new L.Icon({
+//     iconUrl: '../public/wog-icon.png',
+//     iconRetinaUrl: '../public/wog-icon.png',
+//     iconSize: new L.Point(60, 75),
+//     className: 'leaflet-div-icon'
+// })
+
+// const socarMarker = new L.Icon({
+//     iconUrl: '../public/socar-map-marker.svg',
+//     iconRetinaUrl: '../public/socar-map-marker.svg',
+//     iconSize: new L.Point(60, 75),
+//     className: 'leaflet-div-icon'
+// })
+
+// const defaultMarker = new L.Icon({
+//     iconUrl: '../public/marker-icon-2x.png',
+//     iconRetinaUrl: '../public/marker-icon-2x.png',
+//     iconSize: new L.Point(60, 75),
+//     className: 'leaflet-div-icon'
+// })
+
+// export const getStationMarker = (brand: string) => {
+//     switch(brand){
+//         case Brands.Okko:
+//             return okkoMarker
+//         case Brands.Wog:
+//             return wogMarker
+//         case Brands.Socar:
+//             return socarMarker
+//         default:
+//             return defaultMarker
+//     }
+// }
