@@ -16,17 +16,25 @@ const params = {
 
 const Home: NextPage = () => {
 
+  const [range, setRange] = useState(0.4)
+  const [location, setLocation] = useState({ lat: 49.783382, lon: 23.9957203 })
+  const [fuelType, setFuelType] = useState(FuelTypes.A95)
+
   const [stations, setStations] = useState([] as Array<FuelStation>);
 
-  useEffect(() => {
-    Promise.all([
+  const getStations = async () => {
+    const params = { range, location, fuelType }
+    const [okko, wog, socar, ukrnafta] = await Promise.all([
       fetchOkko(params),
       fetchWog(params),
       fetchSocar(params),
       fetchUkrnafta(params)
     ])
-    .then(([okko, wog, socar, ukrnafta]) => { setStations([...okko, ...wog, ...socar, ...ukrnafta]) })
+    setStations([...okko, ...wog, ...socar, ...ukrnafta])
+  }
 
+  useEffect(() => {
+    getStations()
   }, [])
 
   return <Map stations={stations}/>

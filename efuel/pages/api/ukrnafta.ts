@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import FormData from 'form-data'
 
-
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
