@@ -1,13 +1,13 @@
 import { OkkoStation } from '../models/okko'
-import { WogStation } from '../models/wog'
+import { WogStation, StationStatus } from '../models/wog'
 import { UkrnaftaStation } from '../models/ukrnafta'
 import { SocarStations } from '../models/socar'
 
 /* temporary imports **/
 // import okko from '../../api_responses/okko gas_stations.json'
 // import socar from '../../api_responses/socar stations.json'
-import wog from '../../api_responses/wog fuel_stations.json'
-import ukrnafta from '../../api_responses/ukrnafta response.json'
+// import wog from '../../api_responses/wog fuel_stations.json'
+// import ukrnafta from '../../api_responses/ukrnafta response.json'
 /* remove after adding real api calls */
 
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
@@ -29,9 +29,9 @@ export const fetchOkko = async (params: FetchParams):Promise<Array<FuelStation>>
     try {
         // const response = okko as OkkoStation // request to okko
         const res = await fetch('https://www.okko.ua/api/uk/type/gas_stations')
-        const response =  (await res.json()) as OkkoStation
+        const data =  (await res.json()) as OkkoStation
 
-        response.collection
+        data.collection
             .filter(station => {
                 return isInRange(params.range, 
                     params.location, 
@@ -78,15 +78,48 @@ export const fetchWog = async(params: FetchParams):Promise<Array<FuelStation>> =
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        const response = wog as WogStation // request to wog
+        // const response = wog as WogStation // request to wog
+        const res = await fetch('https://api.wog.ua/fuel_stations')
+        const data = (await res.json()) as WogStation
         
-        response.data.stations
+        const filteredStations = data.data.stations
                 .filter(station => 
                     isInRange(params.range, params.location, { lat: station.coordinates.latitude, lon: station.coordinates.longitude}))
-                .forEach(station => {
-                    // another async request for availability here 
-                    fuel_stations.push(new FuelStation(station))
-                })
+        for await (const station of filteredStations) {
+            // another async request for availability here 
+            try {
+                const stationRes = await fetch(`https://api.wog.ua/fuel_stations/${station.id}`)
+                const stationData = (await stationRes.json()) as StationStatus
+
+                const { workDescription } = stationData.data
+                const push = () => {
+                    const fuelStation = new FuelStation(station)
+                    fuelStation.fuelTypesAvailable = workDescription
+                    fuel_stations.push(fuelStation)
+                }            
+                switch(params.fuelType){                               
+                    case FuelTypes.A95:
+                        if(workDescription.includes('М95 - Готівка') || workDescription.includes('A95 - Готівка')){
+                            push()                        
+                        }
+                        break
+                    case FuelTypes.DIESEL:
+                        if(workDescription.includes('МДП+ - Готівка') || workDescription.includes('ДП - Готівка')){
+                            push()                        
+                        }
+                        break 
+                    case FuelTypes.LPG:
+                        if(workDescription.includes('ГАЗ - Готівка')){
+                            push()                        
+                        }
+                        break 
+                    default:
+                        break
+                }
+            } catch {
+                console.error(`Error while fetching data from WOG station ${station.id}`)
+            }
+        }
     } catch {
         console.error('Error while fetching data from WOG')
     }
@@ -99,9 +132,9 @@ export const fetchSocar = async(params: FetchParams):Promise<Array<FuelStation>>
     try {
         // const response =  socar as SocarStations
         const res = await fetch('https://socar.ua/api/map/stations')
-        const response =  (await res.json()) as SocarStations
+        const data =  (await res.json()) as SocarStations
         
-        response.data
+        data.data
                 .filter(station => 
                     isInRange(params.range, params.location, { lat: station.attributes.marker.lat, lon: station.attributes.marker.lng }))
                 .forEach(station => {                
@@ -125,8 +158,7 @@ export const fetchSocar = async(params: FetchParams):Promise<Array<FuelStation>>
                             }
                             break 
                         default:
-                            break       
-        
+                            break
                     }
                 })
         } catch {
@@ -142,16 +174,21 @@ export const fetchUkrnafta = async(params: FetchParams):Promise<Array<FuelStatio
 
     try {
         const res = await fetch('/api/ukrnafta')
-        const response =  (await res.json()) as Array<UkrnaftaStation>  
+        const data =  (await res.json()) as Array<UkrnaftaStation>  
         
-        response.filter(station => isInRange(params.range, params.location, {
+        data.filter(station => isInRange(params.range, params.location, {
             lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lon)
         }))
         .forEach(station => {                
             const push = () => {               
                 fuel_stations.push(new FuelStation(station))
             }
-            switch(params.fuelType){                
+            switch(params.fuelType){ 
+                case FuelTypes.A92:
+                    if(station.a92 !== "0.00" || station.a92e !== "0.00"){
+                        push()                        
+                    }
+                    break               
                 case FuelTypes.A95:
                     if(station.a95 !== "0.00" || station.a95e !== "0.00"){
                         push()                        

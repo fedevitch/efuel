@@ -6,18 +6,14 @@ const Map = dynamic(
   () => import('../components/map'),
   { ssr: false }
 )
-
-import FuelStation, {FuelTypes} from '../models/fuelStation'
+import FuelStation, {Coordinates, FuelTypes} from '../models/fuelStation'
 import { fetchOkko, fetchSocar, fetchUkrnafta, fetchWog } from '../components/requests'
 
-const params = {
-  range: 0.4, location: { lat: 49.783382, lon: 23.9957203 }, fuelType: FuelTypes.LPG
-}
 
 const Home: NextPage = () => {
 
-  const [range, setRange] = useState(0.4)
-  const [location, setLocation] = useState({ lat: 49.783382, lon: 23.9957203 })
+  const [range, setRange] = useState(0.044988888)
+  const [location, setLocation] = useState({ lat: 50.783382, lon: 25.9957203 } as Coordinates)
   const [fuelType, setFuelType] = useState(FuelTypes.A95)
 
   const [stations, setStations] = useState([] as Array<FuelStation>);
@@ -31,13 +27,25 @@ const Home: NextPage = () => {
       fetchUkrnafta(params)
     ])
     setStations([...okko, ...wog, ...socar, ...ukrnafta])
+    
   }
 
   useEffect(() => {
-    getStations()
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLocation({ lat: position.coords.latitude, lon: position.coords.longitude })
+      })
+    }
   }, [])
 
-  return <Map stations={stations}/>
+  useEffect(() => {    
+    getStations()
+  }, [range, location.lat, location.lon, fuelType])
+
+  return <Map location={location} stations={stations} range={range}
+              onChangeFuelType={setFuelType} 
+              onChangeRange={setRange} 
+              onChangeLocation={setLocation}/>
 }
 
 export default Home

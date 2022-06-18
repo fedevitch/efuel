@@ -98,3 +98,8 @@ export interface Coordinates {
     lat: number, 
     lon: number
 }
+
+const R = 6371
+
+export const AngleLatitude = (Latitude: number):number => (360 * Latitude) / (2 * Math.PI * R)
+export const Latitude = (AngleLatitude: number):number => (2 * Math.PI * R * AngleLatitude) / 360

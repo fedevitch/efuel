@@ -8,3 +8,11 @@
     width: 100%;
     height: 1000px;
   }
+
+  .fuelSelect {
+    width: 4rem;
+  }
+
+  .rangeInput {
+    width: 4rem;
+  }
