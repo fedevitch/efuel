@@ -13,7 +13,7 @@ import { fetchOkko, fetchSocar, fetchUkrnafta, fetchWog } from '../components/re
 const Home: NextPage = () => {
 
   const [range, setRange] = useState(0.044988888)
-  const [location, setLocation] = useState({ lat: 50.783382, lon: 25.9957203 } as Coordinates)
+  const [location, setLocation] = useState({ lat: 49.840762, lon: 24.0291513} as Coordinates)
   const [fuelType, setFuelType] = useState(FuelTypes.A95)
 
   const [stations, setStations] = useState([] as Array<FuelStation>);

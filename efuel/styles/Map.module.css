@@ -9,8 +9,13 @@
   height: 1000px;
 }
 
+.controlContainer {
+  display: flex;
+  flex-direction: column;
+}
+
 .fuelSelect {
-  width: 4rem;
+  width: 6rem;
   z-index: -1;
 }
 

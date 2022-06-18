@@ -35,7 +35,7 @@ const FuelMap = (props: FuelMapProps) => {
   return (
     <div className={styles.container}>      
       <MapContainer center={[props.location.lat,props.location.lon]} zoom={14} scrollWheelZoom={true} className={styles.map} >
-        <MapControls {...props} />
+        <MapControls {...props} />        
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -69,15 +69,23 @@ const MapControls = (props: FuelMapProps) => {
 
   const createFuelSelector = () => {
     const FuelSelector = L.Control.extend({
-      onAdd: () => {
+      onAdd: () => {        
         const fuelSelect = L.DomUtil.create('select', styles.fuelSelect)
+        fuelSelect.id = 'fuelSelect'
         fuelSelect.options.add(new Option('A95', FuelTypes.A95))
         fuelSelect.options.add(new Option('Дизпаливо', FuelTypes.DIESEL))
         fuelSelect.options.add(new Option('Газ', FuelTypes.LPG))
         fuelSelect.options.add(new Option('A92', FuelTypes.A92))
         fuelSelect.addEventListener('change', () => props.onChangeFuelType(fuelSelect.value as FuelTypes))
 
-        return fuelSelect
+        const container = L.DomUtil.create('div', styles.controlContainer)
+        const label = L.DomUtil.create('label')
+        label.setAttribute('for', 'fuelSelect')
+        label.innerText = 'Тип палива'
+        container.append(label)
+        container.append(fuelSelect)        
+
+        return container
       }
     })
 
@@ -89,11 +97,20 @@ const MapControls = (props: FuelMapProps) => {
       onAdd: () => {
         const rangeInput = L.DomUtil.create('input', styles.rangeInput)
         rangeInput.type = 'number'
+        rangeInput.max = '20'
+        rangeInput.min = '1'
         rangeInput.value = Latitude(props.range).toString()
         rangeInput.addEventListener('change', 
                                     () => props.onChangeRange(AngleLatitude(Number.parseFloat(rangeInput.value))))
         
-                                    return rangeInput
+        const container = L.DomUtil.create('div', styles.controlContainer)
+        const label = L.DomUtil.create('label')
+        label.setAttribute('for', 'fuelSelect')
+        label.innerText = 'Радіус пошуку'
+        container.append(label)
+        container.append(rangeInput)        
+
+        return container
       }
     })
 
