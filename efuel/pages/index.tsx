@@ -42,10 +42,14 @@ const Home: NextPage = () => {
     getStations()
   }, [range, location.lat, location.lon, fuelType])
 
-  return <Map location={location} stations={stations} range={range}
+  return (
+    <div>
+      <title>єПаливо</title>
+      <Map location={location} stations={stations} range={range}
               onChangeFuelType={setFuelType} 
               onChangeRange={setRange} 
               onChangeLocation={setLocation}/>
+    </div>)
 }
 
 export default Home

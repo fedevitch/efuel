@@ -3,6 +3,8 @@ import 'leaflet/dist/leaflet.css'
 import styles from '../styles/Map.module.css'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch'
+import 'leaflet-geosearch/assets/css/leaflet.css'
 
 import FuelStation, { Coordinates, FuelTypes, AngleLatitude, Latitude } from '../models/fuelStation'
 import { useEffect } from 'react'
@@ -31,8 +33,7 @@ const FuelMap = (props: FuelMapProps) => {
   ))
 
   return (
-    <div className={styles.container}>
-      <title>ЄПаливо</title>
+    <div className={styles.container}>      
       <MapContainer center={[props.location.lat,props.location.lon]} zoom={14} scrollWheelZoom={true} className={styles.map} >
         <MapControls {...props} />
         <TileLayer
@@ -52,9 +53,19 @@ const FuelMap = (props: FuelMapProps) => {
 const MapControls = (props: FuelMapProps) => {
   const map = useMap()
 
-  useEffect(() => {
-    map.setView([props.location.lat, props.location.lon])
-  }, [props.location.lat, props.location.lon])
+  const provider = new OpenStreetMapProvider()
+
+  // @ts-ignore
+  const searchControl = new GeoSearchControl({
+    provider: provider,
+    marker: {
+      icon: new L.Icon.Default(),
+      draggable: true
+    },
+    searchLabel: 'Пошук місця'
+  } as any)
+  // @ts-ignore
+  map.on('geosearch/showlocation', (event) => props.onChangeLocation({ lat: event.location.y, lon: event.location.x })) 
 
   const createFuelSelector = () => {
     const FuelSelector = L.Control.extend({
@@ -90,10 +101,15 @@ const MapControls = (props: FuelMapProps) => {
   }
 
   useEffect(() => {
+    map.setView([props.location.lat, props.location.lon])
+  }, [props.location.lat, props.location.lon])
+
+  useEffect(() => {
+    map.addControl(searchControl)
     const fuelSelector = createFuelSelector()
     fuelSelector.addTo(map)
     const rangeInput = createRangeInput()    
-    rangeInput.addTo(map)
+    rangeInput.addTo(map)    
   }, [])
 
   return null
