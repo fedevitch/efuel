@@ -5,7 +5,7 @@ import { Attributes as SocarStation } from '../models/socar'
 import L from 'leaflet'
 
 
-enum Brands {
+export enum Brands {
     Okko = "OKKO",
     Wog = "WOG",
     Socar = "Socar",
@@ -112,44 +112,3 @@ const R = 6371
 
 export const AngleLatitude = (Latitude: number):number => (360 * Latitude) / (2 * Math.PI * R)
 export const Latitude = (AngleLatitude: number):number => Math.round((2 * Math.PI * R * AngleLatitude) / 360)
-
-// const okkoMarker = new L.Icon({
-//     iconUrl: '../public/okko-pin.png',
-//     iconRetinaUrl: '../public/okko-pin.png',
-//     iconSize: new L.Point(60, 75),
-//     className: 'leaflet-div-icon'
-// })
-
-// const wogMarker = new L.Icon({
-//     iconUrl: '../public/wog-icon.png',
-//     iconRetinaUrl: '../public/wog-icon.png',
-//     iconSize: new L.Point(60, 75),
-//     className: 'leaflet-div-icon'
-// })
-
-// const socarMarker = new L.Icon({
-//     iconUrl: '../public/socar-map-marker.svg',
-//     iconRetinaUrl: '../public/socar-map-marker.svg',
-//     iconSize: new L.Point(60, 75),
-//     className: 'leaflet-div-icon'
-// })
-
-// const defaultMarker = new L.Icon({
-//     iconUrl: '../public/marker-icon-2x.png',
-//     iconRetinaUrl: '../public/marker-icon-2x.png',
-//     iconSize: new L.Point(60, 75),
-//     className: 'leaflet-div-icon'
-// })
-
-// export const getStationMarker = (brand: string) => {
-//     switch(brand){
-//         case Brands.Okko:
-//             return okkoMarker
-//         case Brands.Wog:
-//             return wogMarker
-//         case Brands.Socar:
-//             return socarMarker
-//         default:
-//             return defaultMarker
-//     }
-// }

@@ -6,7 +6,7 @@ import L from 'leaflet'
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch'
 import 'leaflet-geosearch/assets/css/leaflet.css'
 
-import FuelStation, { Coordinates, FuelTypes, AngleLatitude, Latitude } from '../models/fuelStation'
+import FuelStation, { Coordinates, FuelTypes, AngleLatitude, Latitude, Brands } from '../models/fuelStation'
 import { useEffect } from 'react'
 
 interface FuelMapProps {
@@ -22,7 +22,8 @@ const FuelMap = (props: FuelMapProps) => {
 
   const markers = props.stations.map(station => (
     <Marker key={`${station.location.lat}:${station.location.lon}`} 
-            position={[station.location.lat, station.location.lon]}>
+            position={[station.location.lat, station.location.lon]}
+            icon={getStationMarker(station.brand)}>
       <Popup>
         {station.brand}<br />
         {station.name}<br />
@@ -130,6 +131,61 @@ const MapControls = (props: FuelMapProps) => {
   }, [])
 
   return null
+}
+
+const okkoMarker = new L.Icon({
+    iconUrl: 'okko-pin.png',
+    iconRetinaUrl: 'okko-pin.png',
+    iconSize: new L.Point(29, 38),
+    iconAnchor: new L.Point(25, 40),
+    shadowUrl: 'marker-shadow.png',
+    shadowAnchor: new L.Point(20, 40),
+    popupAnchor: new L.Point(-10, -10)
+})
+
+const wogMarker = new L.Icon({
+    iconUrl: 'wog-favicon-32x32.png',
+    iconRetinaUrl: 'wog-icon.png',
+    iconSize: new L.Point(32, 32),
+    shadowUrl: 'marker-shadow.png',
+    shadowAnchor: new L.Point(15, 25)
+})
+
+const socarMarker = new L.Icon({
+    iconUrl: 'socar-map-marker.svg',
+    iconRetinaUrl: 'socar-map-marker.svg',
+    iconSize: new L.Point(23, 30),
+    shadowUrl: 'marker-shadow.png',
+    shadowAnchor: new L.Point(14, 22)
+})
+
+const ukrnaftaMarker = new L.Icon({
+  iconUrl: 'ukrnafta_marker_station.png',
+  iconRetinaUrl: 'ukrnafta_marker_station.png',
+  iconSize: new L.Point(53, 54)
+})
+
+const defaultMarker = new L.Icon({
+  iconUrl: 'marker-icon.png',
+  iconRetinaUrl: 'marker-icon-2x.png',    
+  iconSize: new L.Point(25, 41),
+  shadowUrl: 'marker-shadow.png',
+  shadowAnchor: new L.Point(14, 17)
+})
+
+export const getStationMarker = (brand: string) => {
+  switch(brand){
+      case Brands.Okko:
+        return okkoMarker
+      case Brands.Wog:
+        return wogMarker
+      case Brands.Socar:
+        return socarMarker
+      case Brands.Ukrnafta:
+        return ukrnaftaMarker
+      default:
+        return defaultMarker
+  }
 }
 
 export default FuelMap
