@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
-import { useEffect, useState } from 'react'
+import Head from 'next/head'
+import { useEffect, useState, Fragment } from 'react'
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
 const Map = dynamic(
@@ -43,13 +44,16 @@ const Home: NextPage = () => {
   }, [range, location.lat, location.lon, fuelType])
 
   return (
-    <div>
-      <title>єПаливо</title>
+    <Fragment>
+      <Head>
+        <title>єПаливо</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </Head>
       <Map location={location} stations={stations} range={range}
               onChangeFuelType={setFuelType} 
               onChangeRange={setRange} 
               onChangeLocation={setLocation}/>
-    </div>)
+    </Fragment>)
 }
 
 export default Home

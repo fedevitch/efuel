@@ -33,21 +33,19 @@ const FuelMap = (props: FuelMapProps) => {
     </Marker>
   ))
 
-  return (
-    <div className={styles.container}>      
-      <MapContainer center={[props.location.lat,props.location.lon]} zoom={14} scrollWheelZoom={true} className={styles.map} >
-        <MapControls {...props} />        
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <TileLayer
-          attribution='&copy; <a href="mailto:boromir.hawk@gmail.com">Lyubomyr</a>'
-          url=""
-        />
-        {markers}
-      </MapContainer>
-    </div>
+  return (      
+    <MapContainer center={[props.location.lat,props.location.lon]} zoom={14} scrollWheelZoom={true} className={styles.map} >
+      <MapControls {...props} />        
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <TileLayer
+        attribution='&copy; <a href="mailto:boromir.hawk@gmail.com">Lyubomyr</a>'
+        url=""
+      />
+      {markers}
+    </MapContainer>
   )
 }
 
