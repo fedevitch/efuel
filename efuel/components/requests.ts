@@ -4,6 +4,8 @@ import { UkrnaftaStation } from '../models/ukrnafta'
 import { SocarStations } from '../models/socar'
 import { Upg, UpgFuels } from '../models/upg'
 import { Brsm, FuelTypesItem } from '../models/brsm'
+import { Amic } from '../models/amic'
+import { Shell } from '../models/shell'
 
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
 
