@@ -3,6 +3,7 @@ import { WogStation, StationStatus } from '../models/wog'
 import { UkrnaftaStation } from '../models/ukrnafta'
 import { SocarStations } from '../models/socar'
 import { Upg, UpgFuels } from '../models/upg'
+import { Brsm, FuelTypesItem } from '../models/brsm'
 
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
 
@@ -223,6 +224,7 @@ export const fetchUpg = async(params: FetchParams):Promise<Array<FuelStation>> =
 
         upgData.data
             .filter(s => s.Active)
+            .filter(s => isInRange(params.range, params.location, { lat: Number.parseFloat(s.Latitude), lon: Number.parseFloat(s.Longitude) }))
             .filter(s => {
                 const A92 = s.FuelsAsArray.find(f => f.id === UpgFuels.A92)
                 const A95 = s.FuelsAsArray.find(f => f.id === UpgFuels.A95)
@@ -248,6 +250,57 @@ export const fetchUpg = async(params: FetchParams):Promise<Array<FuelStation>> =
     } catch(e) {
         console.log(e)
         console.error('Error while fetching data from Upg')
+    }
+    return fuel_stations
+}
+
+export const fetchBrsm = async(params: FetchParams):Promise<Array<FuelStation>> => {
+    const fuel_stations:Array<FuelStation> = []
+
+    try {
+        const res = await fetch('/api/brsm')
+        const brsmData = (await res.json()) as Brsm
+
+        const fuelTypes = Array<FuelTypesItem>()
+        switch(params.fuelType){ 
+            case FuelTypes.A92:
+                fuelTypes.push(...brsmData.fuel_types.items.filter(type => {
+                    return type.name.includes('92')
+                }))
+                break
+            case FuelTypes.A95:
+                fuelTypes.push(...brsmData.fuel_types.items.filter(type => {
+                    return type.name.includes('95')
+                }))
+                break
+            case FuelTypes.DIESEL:
+                fuelTypes.push(...brsmData.fuel_types.items.filter(type => {
+                    return type.name.includes('ДП') || type.name.includes('ДТ')
+                }))
+                break
+            case FuelTypes.LPG:
+                fuelTypes.push(...brsmData.fuel_types.items.filter(type => {
+                    return type.name.includes('ГАЗ') || type.name.includes('Метан')
+                }))
+                break
+            default:
+                break    
+        }
+        brsmData.points.items
+                .filter(station => isInRange(params.range, params.location, { lat: station.lat, lon: station.lng }))
+                .filter(station => {
+                    return station.fuel_types.filter(typeId => fuelTypes.find(fuelType => fuelType.id === typeId)).length
+                })
+                .forEach(station => {
+                    const fuelStation = new FuelStation(station)
+                    const fuelTypesArray = station.fuel_types.map(typeId => brsmData.fuel_types.items.find(fuelType => fuelType.id === typeId))
+                    fuelStation.fuelTypesAvailable = `Наявне пальне: ${fuelTypesArray.map(type => type?.name).join(' ')}`
+                    fuel_stations.push(fuelStation)
+                })
+
+    } catch(e) {
+        console.log(e)
+        console.error('Error while fetching data from Brsm')
     }
     return fuel_stations
 }

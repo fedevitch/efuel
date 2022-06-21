@@ -3,6 +3,7 @@ import { Station as WogStation } from '../models/wog'
 import { UkrnaftaStation } from '../models/ukrnafta'
 import { Attributes as SocarStation } from '../models/socar'
 import { Datum as UpgStation } from '../models/upg'
+import { PointItem as BrsmStation } from './brsm'
 
 
 export enum Brands {
@@ -11,11 +12,11 @@ export enum Brands {
     Socar = "Socar",
     Ukrnafta = "Ukrnafta",
     Upg = "Upg",
-    Brsm = "Brsm"
+    Brsm = "БРСМ-Нафта"
 }
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -33,6 +34,8 @@ export default class FuelStation {
             this.fromUkrnafta(station as UkrnaftaStation)
         } else if(this.isUpg()) {
             this.fromUpg(station as UpgStation)
+        } else if(this.isBrsm()) {
+            this.fromBrsm(station as BrsmStation)
         }
 
     }
@@ -49,6 +52,7 @@ export default class FuelStation {
     private isSocar = () => this._stationRaw.hasOwnProperty('city_slug')
     private isUkrnafta = () => this._stationRaw.hasOwnProperty('brand')
     private isUpg = () => this._stationRaw.hasOwnProperty('FuelsAsArray')
+    private isBrsm = () => this._stationRaw.hasOwnProperty('fuel_types')
 
     private fromOkko(station: OKKO_station) {
         this.brand = Brands.Okko;
@@ -101,6 +105,13 @@ export default class FuelStation {
         this.address = station.Address;
         this.location = { lat: Number.parseFloat(station.Latitude), lon: Number.parseFloat(station.Longitude) };
         this.fuelTypesAvailable = `${station.FuelsAsArray.map(s => ` ${s.Title}: ${s.Price} `)}`
+    }
+
+    private fromBrsm(station: BrsmStation){
+        this.brand = Brands.Brsm;
+        this.name = station.phone;
+        this.address = station.title;
+        this.location = { lat: station.lat, lon: station.lng }
     }
 }
 

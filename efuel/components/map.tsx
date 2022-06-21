@@ -30,7 +30,7 @@ const FuelMap = (props: FuelMapProps) => {
         {station.brand}<br />
         {station.name}<br />
         {station.address}<br />
-        {"Доступні види палива:"}{station.fuelTypesAvailable}<br />
+        {"Інформація від АЗС:"}{station.fuelTypesAvailable}<br />
       </Popup>
     </Marker>
   ))
