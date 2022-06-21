@@ -2,18 +2,19 @@ import { CollectionAttributes as OKKO_station } from '../models/okko'
 import { Station as WogStation } from '../models/wog'
 import { UkrnaftaStation } from '../models/ukrnafta'
 import { Attributes as SocarStation } from '../models/socar'
-import L from 'leaflet'
+import { Datum as UpgStation } from '../models/upg'
 
 
 export enum Brands {
     Okko = "OKKO",
     Wog = "WOG",
     Socar = "Socar",
-    Ukrnafta = "Ukrnafta"
+    Ukrnafta = "Ukrnafta",
+    Upg = "Upg"
 }
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -29,6 +30,8 @@ export default class FuelStation {
             this.fromSocar(station as SocarStation)
         } else if(this.isUkrnafta()){
             this.fromUkrnafta(station as UkrnaftaStation)
+        } else if(this.isUpg()) {
+            this.fromUpg(station as UpgStation)
         }
 
     }
@@ -44,6 +47,7 @@ export default class FuelStation {
     private isWOG = () => this._stationRaw.hasOwnProperty('link')
     private isSocar = () => this._stationRaw.hasOwnProperty('city_slug')
     private isUkrnafta = () => this._stationRaw.hasOwnProperty('brand')
+    private isUpg = () => this._stationRaw.hasOwnProperty('FuelsAsArray')
 
     private fromOkko(station: OKKO_station) {
         this.brand = Brands.Okko;
@@ -93,6 +97,14 @@ export default class FuelStation {
         DieselE:${station.dte}, 
         LPG:${station.gas}
         `;
+    }
+
+    private fromUpg(station: UpgStation){
+        this.brand = Brands.Upg;
+        this.name = station.FullName;
+        this.address = station.Address;
+        this.location = { lat: Number.parseFloat(station.Latitude), lon: Number.parseFloat(station.Longitude) };
+        this.fuelTypesAvailable = `${JSON.stringify(station.FuelsAsArray)}`
     }
 }
 

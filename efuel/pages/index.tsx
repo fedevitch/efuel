@@ -8,7 +8,7 @@ const Map = dynamic(
   { ssr: false }
 )
 import FuelStation, {Coordinates, FuelTypes} from '../models/fuelStation'
-import { fetchOkko, fetchSocar, fetchUkrnafta, fetchWog } from '../components/requests'
+import { fetchOkko, fetchSocar, fetchUkrnafta, fetchWog, fetchUpg } from '../components/requests'
 
 
 const Home: NextPage = () => {
@@ -21,13 +21,14 @@ const Home: NextPage = () => {
 
   const getStations = async () => {
     const params = { range, location, fuelType }
-    const [okko, wog, socar, ukrnafta] = await Promise.all([
+    const [okko, wog, socar, ukrnafta, upg] = await Promise.all([
       fetchOkko(params),
       fetchWog(params),
       fetchSocar(params),
-      fetchUkrnafta(params)
+      fetchUkrnafta(params),
+      fetchUpg(params)
     ])
-    setStations([...okko, ...wog, ...socar, ...ukrnafta])
+    setStations([...okko, ...wog, ...socar, ...ukrnafta, ...upg])
     
   }
 

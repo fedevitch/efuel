@@ -163,6 +163,14 @@ const ukrnaftaMarker = new L.Icon({
   iconSize: new L.Point(53, 54)
 })
 
+const upgMarker = new L.Icon({
+  iconUrl: 'upg.svg',
+  iconRetinaUrl: 'upg.svg',
+  iconSize: new L.Point(45, 55),
+  shadowUrl: 'marker-shadow.png',
+  shadowAnchor: new L.Point(18, 22)
+})
+
 const defaultMarker = new L.Icon({
   iconUrl: 'marker-icon.png',
   iconRetinaUrl: 'marker-icon-2x.png',    
@@ -181,6 +189,8 @@ export const getStationMarker = (brand: string) => {
         return socarMarker
       case Brands.Ukrnafta:
         return ukrnaftaMarker
+      case Brands.Upg:
+        return upgMarker  
       default:
         return defaultMarker
   }
