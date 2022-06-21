@@ -10,7 +10,8 @@ export enum Brands {
     Wog = "WOG",
     Socar = "Socar",
     Ukrnafta = "Ukrnafta",
-    Upg = "Upg"
+    Upg = "Upg",
+    Brsm = "Brsm"
 }
 
 export default class FuelStation {
