@@ -54,12 +54,7 @@ export default class FuelStation {
         this.name = `${station.type_azk} ${station.Cod_AZK} ${station.Naselenyy_punkt}`;
         this.address = station.Adresa;
         this.location = { lat: station.coordinates.lat, lon: station.coordinates.lng };
-        this.fuelTypesAvailable = `
-        ${station.a95_evro_tip_oplati ? ' A95 ': ''} 
-        ${station.pulls95_tip_oplati ? ' PULLS95 ' : ''}
-        ${station.dp_evro_tip_oplati ? ' DIESEL ' : ''}
-        ${station.pullsdiesel_tip_oplati ? ' PULLS DIESEL ' : ''}
-        ${station.gas_tip_oplati ? ' LPG ' : ''}`;
+        this.fuelTypesAvailable = station.notification.replaceAll(/(<([^>]+)>)/ig, '');
     }
 
     private fromWog(station: WogStation){
@@ -86,16 +81,16 @@ export default class FuelStation {
         this.address = station.addr;
         this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lon) };
         this.fuelTypesAvailable = `
-        A80:${station.a80}, 
-        A90:${station.a90}, 
-        A92:${station.a92}, 
-        A92E:${station.a92e}, 
-        A95:${station.a95}, 
-        A95E:${station.a95e}, 
-        E95S:${station.e95s}, 
-        Diesel:${station.dt}, 
-        DieselE:${station.dte}, 
-        LPG:${station.gas}
+        A80: ${station.a80}, 
+        A90: ${station.a90}, 
+        A92: ${station.a92}, 
+        A92E: ${station.a92e}, 
+        A95: ${station.a95}, 
+        A95E: ${station.a95e}, 
+        E95S: ${station.e95s}, 
+        Diesel: ${station.dt}, 
+        DieselE: ${station.dte}, 
+        LPG: ${station.gas}
         `;
     }
 
@@ -104,7 +99,7 @@ export default class FuelStation {
         this.name = station.FullName;
         this.address = station.Address;
         this.location = { lat: Number.parseFloat(station.Latitude), lon: Number.parseFloat(station.Longitude) };
-        this.fuelTypesAvailable = `${JSON.stringify(station.FuelsAsArray)}`
+        this.fuelTypesAvailable = `${station.FuelsAsArray.map(s => ` ${s.Title}: ${s.Price} `)}`
     }
 }
 

@@ -52,15 +52,17 @@ const FuelMap = (props: FuelMapProps) => {
 const MapControls = (props: FuelMapProps) => {
   const map = useMap()
 
-  const provider = new OpenStreetMapProvider()
+  const osmProvider = new OpenStreetMapProvider()
 
   // @ts-ignore
   const searchControl = new GeoSearchControl({
-    provider: provider,
+    provider: osmProvider,
     marker: {
       icon: new L.Icon.Default(),
       draggable: true
     },
+    keepResult: true,
+    classNames: { input: styles.locationSearch },
     searchLabel: 'Пошук місця'
   } as any)
   // @ts-ignore
