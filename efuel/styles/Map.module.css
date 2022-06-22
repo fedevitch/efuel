@@ -4,8 +4,9 @@
 }
 
 @media (pointer:none), (pointer:coarse) {
+
   .map {
-    height: 93%;
+    height: calc(100% - 55px);
   }
 }
 
@@ -18,11 +19,15 @@
 .fuelSelect {
   width: 6rem;
   z-index: -1;
+  border: 2px solid rgba(0,0,0,0.2);
+  background-color: #fff;
 }
 
 .rangeInput {
   width: 4rem;
   z-index: -1;
+  border: 2px solid rgba(0,0,0,0.2);
+  background-color: #fff;
 }
 
 .locationSearch {
@@ -33,6 +38,14 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.2);
+  box-shadow: 0 5px #999;
+}
+
+.locateButton:active {
+  background-color: #c9c9c9;
+  box-shadow: 0 1px rgb(141, 141, 141);
+  transform: translateY(4px);
 }
 
 .locateButtonIcon {
