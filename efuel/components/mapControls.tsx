@@ -76,6 +76,24 @@ const MapControls = (props: FuelMapProps) => {
   
       return new RangeInput({ position: 'topleft' })
     }
+
+    const createShowMyLocationButton = () => {
+      const ShowLocation = L.Control.extend({
+        onAdd: () => {
+          const showLocationButton = L.DomUtil.create('button')
+          showLocationButton.className = styles.locateButton
+          const icon = L.DomUtil.create('img')
+          icon.className = styles.locateButtonIcon
+          icon.src = '/locate.png'
+          showLocationButton.append(icon)
+          showLocationButton.addEventListener('click', () => map.locate({ setView: true, maxZoom: 14 }))
+
+          return showLocationButton
+        }
+      })
+
+      return new ShowLocation({ position: 'bottomright' })
+    }
   
     useEffect(() => {
       map.setView([props.location.lat, props.location.lon])
@@ -86,7 +104,9 @@ const MapControls = (props: FuelMapProps) => {
       const fuelSelector = createFuelSelector()
       fuelSelector.addTo(map)
       const rangeInput = createRangeInput()    
-      rangeInput.addTo(map)    
+      rangeInput.addTo(map)
+      const locationButton = createShowMyLocationButton()
+      locationButton.addTo(map)    
     }, [])
   
     return null
