@@ -306,3 +306,54 @@ export const fetchBrsm = async(params: FetchParams):Promise<Array<FuelStation>> 
     }
     return fuel_stations
 }
+
+export const fetchAmic = async(params: FetchParams):Promise<Array<FuelStation>> => {
+    const fuel_stations:Array<FuelStation> = []
+
+    try {
+        const res = await fetch(URLS.AMIC)
+        const amicData = (await res.json()) as Amic
+
+        for(const [stationName, station] of Object.entries(amicData)){
+            if(isInRange(params.range, params.location, { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lng) })) {
+                const push = () => {
+                    const fuelStation = new FuelStation(station)
+                    fuelStation.name = stationName               
+                    fuel_stations.push(fuelStation)
+                }
+                switch(params.fuelType){ 
+                    case FuelTypes.A92:
+                        if(station.icons.hasOwnProperty('92 Євро') && station.icons['92 Євро'] !== null){
+                            push()                        
+                        }
+                        break               
+                    case FuelTypes.A95:
+                        if((station.icons.hasOwnProperty('95 Євро') && station.icons['95 Євро'] !== null) || 
+                           (station.icons.hasOwnProperty('95 Prem') && station.icons['95 Prem'] !== null)){
+                            push()                        
+                        }
+                        break
+                    case FuelTypes.DIESEL:
+                        if((station.icons.hasOwnProperty('ДП Євро') && station.icons['ДП Євро'] !== null) || 
+                           (station.icons.hasOwnProperty('ДП Prem') && station.icons['ДП Prem'] !== null)){
+                            push()                        
+                        }
+                        break 
+                    case FuelTypes.LPG:
+                        if(station.icons.hasOwnProperty('Газ') && station.icons['Газ'] !== null){
+                            push()                        
+                        }
+                        break  
+                    default:
+                        break       
+    
+                }
+            }
+        }
+
+    } catch(e) {
+        console.log(e)
+        console.error('Error while fetching data from Amic')
+    }
+    return fuel_stations
+}

@@ -57,11 +57,17 @@ const MapControls = (props: FuelMapProps) => {
         onAdd: () => {
           const rangeInput = L.DomUtil.create('input', styles.rangeInput)
           rangeInput.type = 'number'
-          rangeInput.max = '20'
+          rangeInput.max = '30'
           rangeInput.min = '1'
           rangeInput.value = Latitude(props.range).toString()
           rangeInput.addEventListener('change', 
                                       () => props.onChangeRange(AngleLatitude(Number.parseFloat(rangeInput.value))))
+          rangeInput.addEventListener('keypress', 
+                                      (e) => {
+                                        if(e.key === 'Enter') {
+                                          props.onChangeRange(AngleLatitude(Number.parseFloat(rangeInput.value)))
+                                        }
+                                      })
           
           const container = L.DomUtil.create('div', styles.controlContainer)
           const label = L.DomUtil.create('label')

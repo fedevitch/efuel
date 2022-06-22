@@ -11,7 +11,9 @@ export enum URLS {
     BRSM = "/api/brsm",
     BRSM_API = "https://brsm-nafta.com/ajax-handler-wp.php",
     SHELL = "",
-    AMIC = ""
+    AMIC = "/api/amic",
+    AMIC_API = "https://amicenergy.com.ua/api/get_azs/",
+    AMIC_API_HOST = "amicenergy.com.ua", AMIC_ENERGY_API_PATH = "/api/get_azs"
 }
 
 export default URLS

@@ -11,7 +11,7 @@ import defaultParams from '../components/defaultParams'
 import FuelStation from '../models/fuelStation'
 import { 
   fetchOkko, fetchSocar, fetchUkrnafta, fetchWog, 
-  fetchUpg, fetchBrsm } from '../components/requests'
+  fetchUpg, fetchBrsm, fetchAmic } from '../components/requests'
 
 
 const Home: NextPage = () => {
@@ -26,8 +26,9 @@ const Home: NextPage = () => {
   const [ukrnafta, setUkrnafta] = useState([] as Array<FuelStation>)
   const [upg, setUpg] = useState([] as Array<FuelStation>)
   const [brsm, setBrsm] = useState([] as Array<FuelStation>)
+  const [amic, setAmic] = useState([] as Array<FuelStation>)
 
-  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm]
+  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic]
 
   const getStations = async () => {
     const params = { range, location, fuelType }
@@ -38,7 +39,8 @@ const Home: NextPage = () => {
       fetchSocar(params).then(setSocar),
       fetchUkrnafta(params).then(setUkrnafta),
       fetchUpg(params).then(setUpg),
-      fetchBrsm(params).then(setBrsm)
+      fetchBrsm(params).then(setBrsm),
+      // fetchAmic(params).then(setAmic)
     ])
     
   }

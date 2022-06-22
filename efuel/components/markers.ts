@@ -47,7 +47,15 @@ const brsmMarker = new L.Icon({
     iconSize: new L.Point(45, 55),
     shadowUrl: 'marker-shadow.png',
     shadowAnchor: new L.Point(18, 22)
-  })
+})
+
+const amicMarker = new L.Icon({
+  iconUrl: 'amic.svg',
+  iconRetinaUrl: 'amic.svg',
+  iconSize: new L.Point(45, 55),
+  shadowUrl: 'marker-shadow.png',
+  shadowAnchor: new L.Point(18, 22)
+})
 
 const defaultMarker = new L.Icon({
   iconUrl: 'marker-icon.png',
@@ -70,7 +78,9 @@ export const getStationMarker = (brand: string) => {
       case Brands.Upg:
         return upgMarker
       case Brands.Brsm:
-        return brsmMarker    
+        return brsmMarker
+      case Brands.Amic:
+        return amicMarker      
       default:
         return defaultMarker
   }

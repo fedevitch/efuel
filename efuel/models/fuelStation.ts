@@ -4,6 +4,7 @@ import { UkrnaftaStation } from '../models/ukrnafta'
 import { Attributes as SocarStation } from '../models/socar'
 import { Datum as UpgStation } from '../models/upg'
 import { PointItem as BrsmStation } from './brsm'
+import { AmicStation } from './amic'
 
 
 export enum Brands {
@@ -12,11 +13,12 @@ export enum Brands {
     Socar = "Socar",
     Ukrnafta = "Ukrnafta",
     Upg = "Upg",
-    Brsm = "БРСМ-Нафта"
+    Brsm = "БРСМ-Нафта",
+    Amic = "AMIC Energy"
 }
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -36,6 +38,8 @@ export default class FuelStation {
             this.fromUpg(station as UpgStation)
         } else if(this.isBrsm()) {
             this.fromBrsm(station as BrsmStation)
+        } else if(this.isAmic()) {
+            this.fromAmic(station as AmicStation)
         }
 
     }
@@ -53,6 +57,7 @@ export default class FuelStation {
     private isUkrnafta = () => this._stationRaw.hasOwnProperty('brand')
     private isUpg = () => this._stationRaw.hasOwnProperty('FuelsAsArray')
     private isBrsm = () => this._stationRaw.hasOwnProperty('fuel_types')
+    private isAmic = () => this._stationRaw.hasOwnProperty('icons')
 
     private fromOkko(station: OKKO_station) {
         this.brand = Brands.Okko;
@@ -112,6 +117,12 @@ export default class FuelStation {
         this.name = station.phone;
         this.address = station.title;
         this.location = { lat: station.lat, lon: station.lng }
+    }
+
+    private fromAmic(station: AmicStation){
+        this.brand = Brands.Amic;
+        this.address = station.address;
+        this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lng) }
     }
 }
 
