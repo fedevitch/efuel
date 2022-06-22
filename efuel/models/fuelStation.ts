@@ -5,6 +5,7 @@ import { Attributes as SocarStation } from '../models/socar'
 import { Datum as UpgStation } from '../models/upg'
 import { PointItem as BrsmStation } from './brsm'
 import { AmicStation } from './amic'
+import { Shell } from './shell'
 
 
 export enum Brands {
@@ -14,11 +15,12 @@ export enum Brands {
     Ukrnafta = "Ukrnafta",
     Upg = "Upg",
     Brsm = "БРСМ-Нафта",
-    Amic = "AMIC Energy"
+    Amic = "AMIC Energy",
+    Shell = "Shell"
 }
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation | Shell) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -40,6 +42,8 @@ export default class FuelStation {
             this.fromBrsm(station as BrsmStation)
         } else if(this.isAmic()) {
             this.fromAmic(station as AmicStation)
+        } else if(this.isShell()) {
+            this.fromShell(station as Shell)
         }
 
     }
@@ -54,10 +58,11 @@ export default class FuelStation {
     private isOKKO = () => this._stationRaw.hasOwnProperty('pulls95_tip_oplati')
     private isWOG = () => this._stationRaw.hasOwnProperty('link')
     private isSocar = () => this._stationRaw.hasOwnProperty('city_slug')
-    private isUkrnafta = () => this._stationRaw.hasOwnProperty('brand')
+    private isUkrnafta = () => this._stationRaw.hasOwnProperty('a80')
     private isUpg = () => this._stationRaw.hasOwnProperty('FuelsAsArray')
     private isBrsm = () => this._stationRaw.hasOwnProperty('fuel_types')
     private isAmic = () => this._stationRaw.hasOwnProperty('icons')
+    private isShell = () => this._stationRaw.hasOwnProperty('open_status')
 
     private fromOkko(station: OKKO_station) {
         this.brand = Brands.Okko;
@@ -123,6 +128,14 @@ export default class FuelStation {
         this.brand = Brands.Amic;
         this.address = station.address;
         this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lng) }
+    }
+
+    private fromShell(station: Shell){
+        this.brand = Brands.Shell;
+        this.name = station.name;
+        this.address = `${station.address} ${station.postcode}`;
+        this.location = { lat: station.lat, lon: station.lng }
+        this.fuelTypesAvailable = `For check fuel availability please call ${station.telephone} Fuels: ${station.fuels.join(' ')}`
     }
 }
 

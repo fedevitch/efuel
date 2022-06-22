@@ -10,10 +10,11 @@ export enum URLS {
     UPG_API = "https://upg.ua/merezha_azs/",
     BRSM = "/api/brsm",
     BRSM_API = "https://brsm-nafta.com/ajax-handler-wp.php",
-    SHELL = "",
     AMIC = "/api/amic",
     AMIC_API = "https://amicenergy.com.ua/api/get_azs/",
-    AMIC_API_HOST = "amicenergy.com.ua", AMIC_ENERGY_API_PATH = "/api/get_azs"
+    AMIC_API_HOST = "amicenergy.com.ua", AMIC_ENERGY_API_PATH = "/api/get_azs",
+    SHELL = "/api/shell",
+    SHELL_API = "https://shellgsllocator.geoapp.me/api/v1/locations/nearest_to?autoload=true&travel_mode=driving&avoid_tolls=false&avoid_highways=false&avoid_ferries=false&corridor_radius=5&driving_distances=false&format=json",
 }
 
 export default URLS

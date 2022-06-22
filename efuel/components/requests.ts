@@ -5,7 +5,7 @@ import { SocarStations } from '../models/socar'
 import { Upg, UpgFuels } from '../models/upg'
 import { Brsm, FuelTypesItem } from '../models/brsm'
 import { Amic } from '../models/amic'
-import { Shell } from '../models/shell'
+import { Shell, Fuel as ShellFuelType } from '../models/shell'
 
 import URLS from './urls'
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
@@ -345,15 +345,69 @@ export const fetchAmic = async(params: FetchParams):Promise<Array<FuelStation>> 
                         }
                         break  
                     default:
-                        break       
-    
+                        break
                 }
             }
         }
-
     } catch(e) {
         console.log(e)
         console.error('Error while fetching data from Amic')
+    }
+    return fuel_stations
+}
+
+export const fetchShell = async(params: FetchParams):Promise<Array<FuelStation>> => {
+    const fuel_stations:Array<FuelStation> = []
+
+    try {
+        const res = await fetch(`${URLS.SHELL}?lat=${params.location.lat}&lng=${params.location.lon}`)
+        const shellStations = (await res.json()) as Array<Shell>
+
+        shellStations
+        .filter(station => !station.inactive)
+        .filter(station => {
+            return isInRange(params.range, params.location, { lat: station.lat, lon: station.lng })
+        })
+        .forEach(station => {
+            const push = () => {
+                const fuelStation = new FuelStation(station)                              
+                fuel_stations.push(fuelStation)
+            }
+            switch(params.fuelType){ 
+                case FuelTypes.A92:
+                    if(station.fuels.includes(ShellFuelType.LowOctaneGasoline)){
+                        push()                        
+                    }
+                    break               
+                case FuelTypes.A95:
+                    if(
+                        station.fuels.includes(ShellFuelType.FuelsaveMidgradeGasoline) || 
+                        station.fuels.includes(ShellFuelType.MidgradeGasoline) ||
+                        station.fuels.includes(ShellFuelType.PremiumGasoline) ||
+                        station.fuels.includes(ShellFuelType.SuperPremiumGasoline) ){
+                        push()                        
+                    }
+                    break   
+                case FuelTypes.DIESEL:
+                    if(
+                        station.fuels.includes(ShellFuelType.TruckDiesel) || 
+                        station.fuels.includes(ShellFuelType.ShellRegularDiesel) ||
+                        station.fuels.includes(ShellFuelType.PremiumDiesel) ){
+                        push()                        
+                    }
+                    break    
+                case FuelTypes.LPG:
+                    if(station.fuels.includes(ShellFuelType.AutogasLpg)){
+                        push()                        
+                    }
+                    break 
+                default:
+                    break
+            }
+        })
+    } catch(e) {
+        console.log(e)
+        console.error('Error while fetching data from Shell')
     }
     return fuel_stations
 }
