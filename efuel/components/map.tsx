@@ -31,7 +31,7 @@ const FuelMap = (props: FuelMapProps) => {
         <h3>{"Назва АЗС: "}{station.brand}</h3>
         <h5>{station.name}</h5>
         <p>{"Адреса: "}{station.address}</p>
-        <p><a href={routeLink(station)} target="_blank">Маршрут сюди</a></p>
+        <p><a href={routeLink(station)} target="_blank" rel="noopener">Маршрут сюди</a></p>
         <h5>{"Інформація"}</h5>
         {station.fuelTypesAvailable}
       </Popup>
