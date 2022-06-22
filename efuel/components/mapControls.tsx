@@ -66,7 +66,7 @@ const MapControls = (props: FuelMapProps) => {
           const container = L.DomUtil.create('div', styles.controlContainer)
           const label = L.DomUtil.create('label')
           label.setAttribute('for', 'fuelSelect')
-          label.innerText = 'Радіус пошуку'
+          label.innerText = 'Радіус пошуку (км)'
           container.append(label)
           container.append(rangeInput)        
   

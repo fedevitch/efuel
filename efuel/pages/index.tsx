@@ -7,7 +7,8 @@ const Map = dynamic(
   () => import('../components/map'),
   { ssr: false }
 )
-import FuelStation, {Coordinates, FuelTypes} from '../models/fuelStation'
+import defaultParams from '../components/defaultParams'
+import FuelStation from '../models/fuelStation'
 import { 
   fetchOkko, fetchSocar, fetchUkrnafta, fetchWog, 
   fetchUpg, fetchBrsm } from '../components/requests'
@@ -15,23 +16,30 @@ import {
 
 const Home: NextPage = () => {
 
-  const [range, setRange] = useState(0.044988888)
-  const [location, setLocation] = useState({ lat: 49.840762, lon: 24.0291513} as Coordinates)
-  const [fuelType, setFuelType] = useState(FuelTypes.A95)
+  const [range, setRange] = useState(defaultParams.RANGE_R)
+  const [location, setLocation] = useState(defaultParams.LOCATION)
+  const [fuelType, setFuelType] = useState(defaultParams.FUEL_TYPE)
 
-  const [stations, setStations] = useState([] as Array<FuelStation>);
+  const [okko, setOkko] = useState([] as Array<FuelStation>)
+  const [wog, setWog] = useState([] as Array<FuelStation>)
+  const [socar, setSocar] = useState([] as Array<FuelStation>)
+  const [ukrnafta, setUkrnafta] = useState([] as Array<FuelStation>)
+  const [upg, setUpg] = useState([] as Array<FuelStation>)
+  const [brsm, setBrsm] = useState([] as Array<FuelStation>)
+
+  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm]
 
   const getStations = async () => {
     const params = { range, location, fuelType }
-    const [okko, wog, socar, ukrnafta, upg, brsm] = await Promise.all([
-      fetchOkko(params),
-      fetchWog(params),
-      fetchSocar(params),
-      fetchUkrnafta(params),
-      fetchUpg(params),
-      fetchBrsm(params)
+    
+    await Promise.all([
+      fetchOkko(params).then(setOkko),
+      fetchWog(params).then(setWog),
+      fetchSocar(params).then(setSocar),
+      fetchUkrnafta(params).then(setUkrnafta),
+      fetchUpg(params).then(setUpg),
+      fetchBrsm(params).then(setBrsm)
     ])
-    setStations([...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm])
     
   }
 
