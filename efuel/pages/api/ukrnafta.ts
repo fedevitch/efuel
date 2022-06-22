@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import FormData from 'form-data'
+import URLS from '../../components/urls'
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,7 +10,7 @@ export default async function handler(
         return new Promise((resolve, reject) => {
             const form = new FormData()
             form.append('search_map', 'go')
-            form.submit('https://avias.ua/karta-azs', (err, apiResponse) => {
+            form.submit(URLS.UKRNAFTA_API, (err, apiResponse) => {
                 if(err){
                     res.status(500).end('Error with request to Ukrnafta')
                     reject(err)

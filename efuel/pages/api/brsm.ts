@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import FormData from 'form-data'
+import URLS from '../../components/urls'
 
 const callAjaxHandler = (action: string):Promise<string> => new Promise((resolve, reject) => {            
     const formGetTypes = new FormData()
     formGetTypes.append('action', action)
     formGetTypes.append('lang', 'uk')
-    formGetTypes.submit('https://brsm-nafta.com/ajax-handler-wp.php', (err, apiResponse) => {
+    formGetTypes.submit(URLS.BRSM_API, (err, apiResponse) => {
         if(err){            
             reject(err)
         }

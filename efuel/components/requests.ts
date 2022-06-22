@@ -7,6 +7,7 @@ import { Brsm, FuelTypesItem } from '../models/brsm'
 import { Amic } from '../models/amic'
 import { Shell } from '../models/shell'
 
+import URLS from './urls'
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
 
 interface FetchParams {
@@ -24,8 +25,7 @@ export const fetchOkko = async (params: FetchParams):Promise<Array<FuelStation>>
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        // const response = okko as OkkoStation // request to okko
-        const res = await fetch('https://www.okko.ua/api/uk/type/gas_stations')
+        const res = await fetch(URLS.OKKO)
         const data =  (await res.json()) as OkkoStation
 
         data.collection
@@ -76,7 +76,7 @@ export const fetchWog = async(params: FetchParams):Promise<Array<FuelStation>> =
 
     try {
         // const response = wog as WogStation // request to wog
-        const res = await fetch('https://api.wog.ua/fuel_stations')
+        const res = await fetch(URLS.WOG)
         const data = (await res.json()) as WogStation
         
         const filteredStations = data.data.stations
@@ -85,7 +85,7 @@ export const fetchWog = async(params: FetchParams):Promise<Array<FuelStation>> =
         for await (const station of filteredStations) {
             // another async request for availability here 
             try {
-                const stationRes = await fetch(`https://api.wog.ua/fuel_stations/${station.id}`)
+                const stationRes = await fetch(`${URLS.WOG_STATION}${station.id}`)
                 const stationData = (await stationRes.json()) as StationStatus
 
                 const { workDescription } = stationData.data
@@ -128,7 +128,7 @@ export const fetchSocar = async(params: FetchParams):Promise<Array<FuelStation>>
 
     try {
         // const response =  socar as SocarStations
-        const res = await fetch('https://socar.ua/api/map/stations')
+        const res = await fetch(URLS.SOCAR)
         const socarData =  (await res.json()) as SocarStations
         
         socarData.data
@@ -170,7 +170,7 @@ export const fetchUkrnafta = async(params: FetchParams):Promise<Array<FuelStatio
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        const res = await fetch('/api/ukrnafta')
+        const res = await fetch(URLS.UKRNAFTA)
         const data = (await res.json()) as Array<UkrnaftaStation>  
         
         data.filter(station => isInRange(params.range, params.location, {
@@ -218,7 +218,7 @@ export const fetchUpg = async(params: FetchParams):Promise<Array<FuelStation>> =
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        const res = await fetch('/api/upg')
+        const res = await fetch(URLS.UPG)
         const responseText = await res.text()
         const rawData = responseText.substring(responseText.indexOf('var objmap = ') + 13, responseText.indexOf('var map;')).replace(';', '')
 
@@ -260,7 +260,7 @@ export const fetchBrsm = async(params: FetchParams):Promise<Array<FuelStation>> 
     const fuel_stations:Array<FuelStation> = []
 
     try {
-        const res = await fetch('/api/brsm')
+        const res = await fetch(URLS.BRSM)
         const brsmData = (await res.json()) as Brsm
 
         const fuelTypes = Array<FuelTypesItem>()

@@ -20,7 +20,7 @@ export interface FuelMapProps {
 const FuelMap = (props: FuelMapProps) => { 
 
   const routeLink = (station: FuelStation) => {
-    return `https://www.google.com.ua/maps/dir/${props.location.lat},${props.location.lon}/${station.brand.toUpperCase()},${station.address.replaceAll(' ', '+')}/@${station.location.lat},${station.location.lon}`;
+    return `https://www.google.com.ua/maps/dir/${props.location.lat},${props.location.lon}/${station.brand.toUpperCase()},${station.name},${station.address.replaceAll(' ', '+')}/@${station.location.lat},${station.location.lon}`;
   }
 
   const markers = props.stations.map(station => (
