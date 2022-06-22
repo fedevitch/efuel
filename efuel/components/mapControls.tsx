@@ -49,7 +49,7 @@ const MapControls = (props: FuelMapProps) => {
         }
       })
   
-      return new FuelSelector({ position: 'topleft' })
+      return new FuelSelector({ position: 'bottomleft' })
     }
   
     const createRangeInput = () => {
@@ -74,7 +74,7 @@ const MapControls = (props: FuelMapProps) => {
         }
       })
   
-      return new RangeInput({ position: 'topleft' })
+      return new RangeInput({ position: 'bottomleft' })
     }
 
     const createShowMyLocationButton = () => {

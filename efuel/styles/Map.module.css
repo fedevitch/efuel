@@ -4,16 +4,33 @@
 }
 
 @media (pointer:none), (pointer:coarse) {
-
   .map {
     height: calc(100% - 55px);
   }
+
+  .stationPopup {
+    /* width: 98vw; */
+
+  }
+
+  .stationPopupContainer {    
+    /*   */
+  }
+}
+
+.stationPopup {
+    
+}
+
+.stationPopupContainer {
+  width: 100%;
 }
 
 .controlContainer {
   display: flex;
   flex-direction: column;
   z-index: -1;
+  font-size: larger;
 }
 
 .fuelSelect {
