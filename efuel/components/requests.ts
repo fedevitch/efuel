@@ -219,10 +219,7 @@ export const fetchUpg = async(params: FetchParams):Promise<Array<FuelStation>> =
 
     try {
         const res = await fetch(URLS.UPG)
-        const responseText = await res.text()
-        const rawData = responseText.substring(responseText.indexOf('var objmap = ') + 13, responseText.indexOf('var map;')).replace(';', '')
-
-        const upgData = JSON.parse(rawData) as Upg
+        const upgData = (await res.json()) as Upg
 
         upgData.data
             .filter(s => s.Active)

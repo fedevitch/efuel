@@ -13,11 +13,16 @@ export default async function handler(
               apiResponse.on('error', err => {                
                   reject(err)
               })
-              let data = ""
-              apiResponse.on('data', chunk => data += chunk)
+              let responseText = ""
+              apiResponse.on('data', chunk => responseText += chunk)
               apiResponse.on('end', () => {
-                  res.status(200).end(data)                
-                  resolve(200)
+                const data = responseText
+                              .substring(
+                                responseText.indexOf('var objmap = ') + 13, 
+                                responseText.indexOf('var map;'))
+                                .replace(';', '')
+                res.status(200).end(data)                
+                resolve(200)
               })            
             })
           })

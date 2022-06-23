@@ -16,6 +16,8 @@ import {
 
 const Home: NextPage = () => {
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const [range, setRange] = useState(defaultParams.RANGE_R)
   const [location, setLocation] = useState(defaultParams.LOCATION)
   const [fuelType, setFuelType] = useState(defaultParams.FUEL_TYPE)
@@ -33,7 +35,7 @@ const Home: NextPage = () => {
 
   const getStations = async () => {
     const params = { range, location, fuelType }
-    
+    setIsLoading(true)
     await Promise.all([
       fetchOkko(params).then(setOkko),
       fetchWog(params).then(setWog),
@@ -44,7 +46,7 @@ const Home: NextPage = () => {
       // fetchAmic(params).then(setAmic),
       fetchShell(params).then(setShell)
     ])
-    
+    setIsLoading(false)    
   }
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const Home: NextPage = () => {
         <title>єПаливо</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
-      <Map location={location} stations={stations} range={range}
+      <Map location={location} stations={stations} range={range} isLoading={isLoading}
               onChangeFuelType={setFuelType} 
               onChangeRange={setRange} 
               onChangeLocation={setLocation}/>

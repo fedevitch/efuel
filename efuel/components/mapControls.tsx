@@ -56,6 +56,7 @@ const MapControls = (props: FuelMapProps) => {
       const RangeInput = L.Control.extend({
         onAdd: () => {
           const rangeInput = L.DomUtil.create('input', styles.rangeInput)
+          rangeInput.id = 'rangeInput'
           rangeInput.type = 'number'
           rangeInput.max = '30'
           rangeInput.min = '1'
@@ -71,7 +72,7 @@ const MapControls = (props: FuelMapProps) => {
           
           const container = L.DomUtil.create('div', styles.controlContainer)
           const label = L.DomUtil.create('label')
-          label.setAttribute('for', 'fuelSelect')
+          label.setAttribute('for', 'rangeInput')
           label.innerText = 'Радіус пошуку (км)'
           container.append(label)
           container.append(rangeInput)        
@@ -114,6 +115,19 @@ const MapControls = (props: FuelMapProps) => {
       const locationButton = createShowMyLocationButton()
       locationButton.addTo(map)    
     }, [])
+
+    useEffect(() => {
+      const fuelSelect = document.getElementById('fuelSelect')
+      const rangeInput = document.getElementById('rangeInput')
+      if(props.isLoading) {
+        fuelSelect?.setAttribute('disabled', 'true')      
+        rangeInput?.setAttribute('disabled', 'true')
+      } else {
+        fuelSelect?.removeAttribute('disabled')
+        rangeInput?.removeAttribute('disabled')
+      }
+      
+    }, [props.isLoading])
   
     return null
 }

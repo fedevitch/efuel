@@ -135,7 +135,8 @@ export default class FuelStation {
         this.name = station.name;
         this.address = `${station.address} ${station.postcode}`;
         this.location = { lat: station.lat, lon: station.lng }
-        this.fuelTypesAvailable = `For check fuel availability please call ${station.telephone} Fuels: ${station.fuels.join(' ')}`
+        this.fuelTypesAvailable = `For check fuel availability please call ${station.telephone} 
+        Fuels: ${station.fuels.map(f => f.split('_').map(w => `${w[0].toUpperCase()}${w.substring(1)}`).join(' ')).join(', ')}`
     }
 }
 

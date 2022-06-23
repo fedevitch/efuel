@@ -12,6 +12,7 @@ export interface FuelMapProps {
   stations: Array<FuelStation>;
   location: Coordinates;
   range: number;
+  isLoading: boolean;
   onChangeLocation: (location: Coordinates) => void;
   onChangeFuelType: (fuelType: FuelTypes) => void;
   onChangeRange: (newRange: number) => void;
