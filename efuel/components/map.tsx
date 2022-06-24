@@ -13,6 +13,7 @@ export interface FuelMapProps {
   location: Coordinates;
   range: number;
   isLoading: boolean;
+  status: {message: string, progress: number};
   onChangeLocation: (location: Coordinates) => void;
   onChangeFuelType: (fuelType: FuelTypes) => void;
   onChangeRange: (newRange: number) => void;

@@ -17,6 +17,8 @@ import {
 const Home: NextPage = () => {
 
   const [isLoading, setIsLoading] = useState(false)
+  const [status, setStatus] = useState("Готово")
+  const [progress, setProgress] = useState(0)
 
   const [range, setRange] = useState(defaultParams.RANGE_R)
   const [location, setLocation] = useState(defaultParams.LOCATION)
@@ -33,21 +35,36 @@ const Home: NextPage = () => {
 
   const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic, ...shell]
 
+  const getStationData = async (getter: Promise<Array<FuelStation>>, statusStart: string, statusEnd: string): Promise<Array<FuelStation>> => {
+    setStatus(statusStart)
+    const fuelStations = await getter
+    setStatus(statusEnd)
+    return fuelStations
+  }
+
   const getStations = async () => {
     const params = { range, location, fuelType }
     setIsLoading(true)
+    setProgress(0)
     await Promise.all([
-      fetchOkko(params).then(setOkko),
-      fetchWog(params).then(setWog),
-      fetchSocar(params).then(setSocar),
-      fetchUkrnafta(params).then(setUkrnafta),
-      fetchUpg(params).then(setUpg),
-      fetchBrsm(params).then(setBrsm),
-      // fetchAmic(params).then(setAmic),
-      fetchShell(params).then(setShell)
+      getStationData(fetchOkko(params), "Дзвонимо на ОККО", "OKKO: Готово").then(setOkko),
+      getStationData(fetchWog(params), "Питаємся у WOG", "WOG: Готово").then(setWog),
+      getStationData(fetchSocar(params), "Набираємо Socar", "Socar: Готово").then(setSocar),
+      getStationData(fetchUkrnafta(params), "Завантажується Укрнафта", "Укрнафта завантажилась").then(setUkrnafta),
+      getStationData(fetchUpg(params), "Йдемо до Upg", "Upg - Є!").then(setUpg),
+      getStationData(fetchBrsm(params), "Качаємо в БРСМ-Нафта", "БРСМ-Нафта скачалась").then(setBrsm),
+      // getStationData(fetchAmic(params), "AMIC - старт", "AMIC - готово").then(setAmic),
+      getStationData(fetchShell(params), "Calling Shell", "Shell - OK").then(setShell)
     ])
-    setIsLoading(false)    
+    setIsLoading(false) 
+    setStatus("Готово")
+    setProgress(100)
   }
+
+  useEffect(() => {
+    const value = progress + 100/7
+    setProgress(value > 100 ? 100 : value)
+  }, [stations.length])
 
   useEffect(() => {
     if(navigator.geolocation) {
@@ -67,7 +84,7 @@ const Home: NextPage = () => {
         <title>єПаливо</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
-      <Map location={location} stations={stations} range={range} isLoading={isLoading}
+      <Map location={location} stations={stations} range={range} isLoading={isLoading} status={{message: status, progress}}
               onChangeFuelType={setFuelType} 
               onChangeRange={setRange} 
               onChangeLocation={setLocation}/>

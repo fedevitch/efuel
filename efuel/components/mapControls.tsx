@@ -101,6 +101,23 @@ const MapControls = (props: FuelMapProps) => {
 
       return new ShowLocation({ position: 'bottomright' })
     }
+
+    const createStatusBar = () => {
+      const StatusBar = L.Control.extend({
+        onAdd: () => {
+          const container = L.DomUtil.create('div', styles.controlContainer)
+          const statusMessage = L.DomUtil.create('h5')
+          statusMessage.id = 'status'
+          statusMessage.innerText = `${props.status.message} ${props.status.progress.toFixed(0)}%`
+          container.append(statusMessage)
+
+          return container
+        }
+
+      })
+
+      return new StatusBar({ position: 'bottomleft' })
+    }
   
     useEffect(() => {
       map.setView([props.location.lat, props.location.lon])
@@ -108,12 +125,14 @@ const MapControls = (props: FuelMapProps) => {
   
     useEffect(() => {
       map.addControl(searchControl)
+      const statusBar = createStatusBar()
+      statusBar.addTo(map) 
       const fuelSelector = createFuelSelector()
       fuelSelector.addTo(map)
       const rangeInput = createRangeInput()    
       rangeInput.addTo(map)
       const locationButton = createShowMyLocationButton()
-      locationButton.addTo(map)    
+      locationButton.addTo(map)         
     }, [])
 
     useEffect(() => {
@@ -128,6 +147,13 @@ const MapControls = (props: FuelMapProps) => {
       }
       
     }, [props.isLoading])
+
+    useEffect(() => {
+      const statusBar = document.getElementById('status')
+      if(statusBar !== null) {
+        statusBar.innerText = `${props.status.message} ${props.status.progress.toFixed(0)}%`
+      }
+    }, [props.status.message, props.status.progress, props.isLoading])
   
     return null
 }
