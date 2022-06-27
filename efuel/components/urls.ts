@@ -15,6 +15,8 @@ export enum URLS {
     AMIC_API_HOST = "amicenergy.com.ua", AMIC_ENERGY_API_PATH = "/api/get_azs",
     SHELL = "/api/shell",
     SHELL_API = "https://shellgsllocator.geoapp.me/api/v1/locations/nearest_to?autoload=true&travel_mode=driving&avoid_tolls=false&avoid_highways=false&avoid_ferries=false&corridor_radius=5&driving_distances=false&format=json",
+    MOTTO = "/api/motto",
+    MOTTO_API = "https://motto.ua/azs/tmp.xml"
 }
 
 export default URLS

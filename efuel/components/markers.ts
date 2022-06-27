@@ -65,6 +65,14 @@ const shellMarker = new L.Icon({
   shadowAnchor: new L.Point(18, 22)
 })
 
+const mottoMarker = new L.Icon({
+  iconUrl: 'motto.png',
+  iconRetinaUrl: 'motto_retina.png',    
+  iconSize: new L.Point(35, 40),
+  shadowUrl: 'marker-shadow.png',
+  shadowAnchor: new L.Point(14, 17)
+})
+
 const defaultMarker = new L.Icon({
   iconUrl: 'marker-icon.png',
   iconRetinaUrl: 'marker-icon-2x.png',    
@@ -91,6 +99,8 @@ export const getStationMarker = (brand: string) => {
         return amicMarker
       case Brands.Shell:
         return shellMarker
+      case Brands.Motto:
+        return mottoMarker  
       default:
         return defaultMarker
   }

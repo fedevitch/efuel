@@ -7,16 +7,19 @@ import { Brsm, FuelTypesItem } from '../models/brsm'
 import { Amic } from '../models/amic'
 import { Shell, Fuel as ShellFuelType } from '../models/shell'
 
+import { Marker, Motto } from '../models/motto'
+import { parseStringPromise } from 'xml2js'
+
 import URLS from './urls'
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
 
-interface FetchParams {
+export interface FetchParams {
     range: number,
     location: Coordinates, 
     fuelType: FuelTypes
 }
 
-const isInRange = (range:number, point1: Coordinates, point2: Coordinates):boolean => {
+export const isInRange = (range:number, point1: Coordinates, point2: Coordinates):boolean => {
     const distance = Math.sqrt(Math.pow(point1.lat - point2.lat, 2) + Math.pow(point1.lon - point2.lon, 2))
     return range >= distance
 }
@@ -408,3 +411,54 @@ export const fetchShell = async(params: FetchParams):Promise<Array<FuelStation>>
     }
     return fuel_stations
 }
+
+export const fetchMotto = async(params: FetchParams):Promise<Array<FuelStation>> => {
+    const fuel_stations:Array<FuelStation> = []
+
+    try {
+        const res = await fetch(URLS.MOTTO)
+        const resXml = await res.text()
+        const mottoStations = (await parseStringPromise(resXml, { mergeAttrs: true, explicitArray: false })) as Motto
+
+        mottoStations.markers.marker
+        .filter(marker => isInRange(params.range, params.location, { lat: Number.parseFloat(marker.lat), lon: Number.parseFloat(marker.lng) }))
+        .forEach(marker => {
+            const push = () => {
+                const fuelStation = new FuelStation(marker)                              
+                fuel_stations.push(fuelStation)
+            }
+
+            switch(params.fuelType){ 
+                case FuelTypes.A92:
+                    if(marker.toplivo.includes('А92')){
+                        push()                        
+                    }
+                    break               
+                case FuelTypes.A95:
+                    if(marker.toplivo.includes('А95')){
+                        push()                        
+                    }
+                    break   
+                case FuelTypes.DIESEL:
+                    if(marker.toplivo.includes('ДП')){
+                        push()                        
+                    }
+                    break    
+                case FuelTypes.LPG:
+                    if(marker.toplivo.includes('Газ')){
+                        push()                        
+                    }
+                    break 
+                default:
+                    break
+            }
+
+        })
+
+    } catch(e) {
+        console.log(e)
+        console.error('Error while fetching data from Motto')
+    }
+    return fuel_stations
+}
+

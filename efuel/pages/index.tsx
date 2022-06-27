@@ -11,7 +11,7 @@ import defaultParams from '../components/defaultParams'
 import FuelStation from '../models/fuelStation'
 import { 
   fetchOkko, fetchSocar, fetchUkrnafta, fetchWog, 
-  fetchUpg, fetchBrsm, fetchAmic, fetchShell } from '../components/requests'
+  fetchUpg, fetchBrsm, fetchAmic, fetchShell, fetchMotto } from '../components/requests'
 
 
 const Home: NextPage = () => {
@@ -32,8 +32,10 @@ const Home: NextPage = () => {
   const [brsm, setBrsm] = useState([] as Array<FuelStation>)
   const [amic, setAmic] = useState([] as Array<FuelStation>)
   const [shell, setShell] = useState([] as Array<FuelStation>)
+  const [motto, setMotto] = useState([] as Array<FuelStation>)
 
-  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic, ...shell]
+  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic, ...shell, ...motto]
+  const stationsUnflattened = [okko, wog, socar, ukrnafta, upg, brsm, amic, shell, motto]
 
   const getStationData = async (getter: Promise<Array<FuelStation>>, statusStart: string, statusEnd: string): Promise<Array<FuelStation>> => {
     setStatus(statusStart)
@@ -54,7 +56,8 @@ const Home: NextPage = () => {
       getStationData(fetchUpg(params), "Йдемо до Upg", "Upg - Є!").then(setUpg),
       getStationData(fetchBrsm(params), "Качаємо в БРСМ-Нафта", "БРСМ-Нафта скачалась").then(setBrsm),
       // getStationData(fetchAmic(params), "AMIC - старт", "AMIC - готово").then(setAmic),
-      getStationData(fetchShell(params), "Calling Shell", "Shell - OK").then(setShell)
+      getStationData(fetchShell(params), "Calling Shell", "Shell - OK").then(setShell),
+      getStationData(fetchMotto(params), "Мотто: врум-врумм", "Мотто ОК").then(setMotto)
     ])
     setIsLoading(false) 
     setStatus("Готово")
@@ -62,7 +65,7 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    const value = progress + 100/7
+    const value = progress + 100/(stationsUnflattened.length - 1)
     setProgress(value > 100 ? 100 : value)
   }, [stations.length])
 

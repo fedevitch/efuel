@@ -6,6 +6,7 @@ import { Datum as UpgStation } from '../models/upg'
 import { PointItem as BrsmStation } from './brsm'
 import { AmicStation } from './amic'
 import { Shell } from './shell'
+import { Marker as Motto } from './motto'
 
 
 export enum Brands {
@@ -16,11 +17,12 @@ export enum Brands {
     Upg = "Upg",
     Brsm = "БРСМ-Нафта",
     Amic = "AMIC Energy",
-    Shell = "Shell"
+    Shell = "Shell",
+    Motto = "Motto"
 }
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation | Shell) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation | Shell | Motto) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -44,6 +46,8 @@ export default class FuelStation {
             this.fromAmic(station as AmicStation)
         } else if(this.isShell()) {
             this.fromShell(station as Shell)
+        } else if(this.isMotto()) {
+            this.fromMotto(station as Motto)
         }
 
     }
@@ -56,13 +60,14 @@ export default class FuelStation {
     private _stationRaw: object;
 
     private isOKKO = () => this._stationRaw.hasOwnProperty('pulls95_tip_oplati')
-    private isWOG = () => this._stationRaw.hasOwnProperty('link')
+    private isWOG = () => this._stationRaw.hasOwnProperty('coordinates')
     private isSocar = () => this._stationRaw.hasOwnProperty('city_slug')
     private isUkrnafta = () => this._stationRaw.hasOwnProperty('a80')
     private isUpg = () => this._stationRaw.hasOwnProperty('FuelsAsArray')
     private isBrsm = () => this._stationRaw.hasOwnProperty('fuel_types')
     private isAmic = () => this._stationRaw.hasOwnProperty('icons')
     private isShell = () => this._stationRaw.hasOwnProperty('open_status')
+    private isMotto = () => this._stationRaw.hasOwnProperty('toplivo')
 
     private fromOkko(station: OKKO_station) {
         this.brand = Brands.Okko;
@@ -137,6 +142,15 @@ export default class FuelStation {
         this.location = { lat: station.lat, lon: station.lng }
         this.fuelTypesAvailable = `For check fuel availability please call ${station.telephone} 
         Fuels: ${station.fuels.map(f => f.split('_').map(w => `${w[0].toUpperCase()}${w.substring(1)}`).join(' ')).join(', ')}`
+    }
+
+    private fromMotto(station: Motto){
+        this.brand = Brands.Motto;
+        this.name = station.name;
+        this.address = station.address;
+        this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lng) };
+        this.fuelTypesAvailable = station.toplivo;
+
     }
 }
 
