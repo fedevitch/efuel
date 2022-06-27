@@ -48,3 +48,10 @@ Thumbs.db
 *.mov
 *.wmv
 
+
+# PWA builds
+**/public/workbox-*.js
+**/public/sw.js
+**/public/worker-*.js
+efuel/public/sw.js.map
+efuel/public/workbox-*.js.map
