@@ -11,7 +11,7 @@ import defaultParams from '../components/defaultParams'
 import FuelStation from '../models/fuelStation'
 import { 
   fetchOkko, fetchSocar, fetchUkrnafta, fetchWog, 
-  fetchUpg, fetchBrsm, fetchAmic, fetchShell, fetchMotto } from '../components/requests'
+  fetchUpg, fetchBrsm, fetchAmic, fetchShell, fetchMotto, fetchChipo } from '../components/requests'
 
 
 const Home: NextPage = () => {
@@ -33,9 +33,10 @@ const Home: NextPage = () => {
   const [amic, setAmic] = useState([] as Array<FuelStation>)
   const [shell, setShell] = useState([] as Array<FuelStation>)
   const [motto, setMotto] = useState([] as Array<FuelStation>)
+  const [chipo, setChipo] = useState([] as Array<FuelStation>)
 
-  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic, ...shell, ...motto]
-  const stationsUnflattened = [okko, wog, socar, ukrnafta, upg, brsm, amic, shell, motto]
+  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic, ...shell, ...motto, ...chipo]
+  const stationsUnflattened = [okko, wog, socar, ukrnafta, upg, brsm, amic, shell, motto, chipo]
 
   const getStationData = async (getter: Promise<Array<FuelStation>>, statusStart: string, statusEnd: string): Promise<Array<FuelStation>> => {
     setStatus(statusStart)
@@ -57,7 +58,8 @@ const Home: NextPage = () => {
       getStationData(fetchBrsm(params), "Качаємо в БРСМ-Нафта", "БРСМ-Нафта скачалась").then(setBrsm),
       // getStationData(fetchAmic(params), "AMIC - старт", "AMIC - готово").then(setAmic),
       getStationData(fetchShell(params), "Calling Shell", "Shell - OK").then(setShell),
-      getStationData(fetchMotto(params), "Мотто: врум-врумм", "Мотто ОК").then(setMotto)
+      getStationData(fetchMotto(params), "Мотто: врум-врумм", "Мотто ОК").then(setMotto),
+      getStationData(fetchChipo(params), "Чіпаємо Chipo", "Chipo - OK").then(setChipo)
     ])
     setIsLoading(false) 
     setStatus("Готово")

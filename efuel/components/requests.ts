@@ -10,6 +10,8 @@ import { Shell, Fuel as ShellFuelType } from '../models/shell'
 import { Marker, Motto } from '../models/motto'
 import { parseStringPromise } from 'xml2js'
 
+import { Chipo } from '../models/chipo'
+
 import URLS from './urls'
 import FuelStation, {FuelTypes, Coordinates} from '../models/fuelStation'
 
@@ -452,9 +454,7 @@ export const fetchMotto = async(params: FetchParams):Promise<Array<FuelStation>>
                 default:
                     break
             }
-
         })
-
     } catch(e) {
         console.log(e)
         console.error('Error while fetching data from Motto')
@@ -462,3 +462,53 @@ export const fetchMotto = async(params: FetchParams):Promise<Array<FuelStation>>
     return fuel_stations
 }
 
+export const fetchChipo = async(params: FetchParams):Promise<Array<FuelStation>> => {
+    const fuel_stations:Array<FuelStation> = []
+
+    try {
+        const res = await fetch(URLS.CHIPO)
+        const data = (await res.json()) as Chipo
+
+        data.KOObject[0].locations
+        .filter(station => isInRange(params.range, params.location, { 
+            lat: Number.parseFloat(station.latitude),
+            lon: Number.parseFloat(station.longitude)
+         }))
+        .forEach(station => {
+            const push = () => {
+                const fuelStation = new FuelStation(station)                              
+                fuel_stations.push(fuelStation)
+            }
+
+            switch(params.fuelType){ 
+                case FuelTypes.A92:
+                    if(station.description.includes('92.png')){
+                        push()                        
+                    }
+                    break               
+                case FuelTypes.A95:
+                    if(station.description.includes('95.png')){
+                        push()                        
+                    }
+                    break   
+                case FuelTypes.DIESEL:
+                    if(station.description.includes('dp.png')){
+                        push()                        
+                    }
+                    break    
+                case FuelTypes.LPG:
+                    if(station.description.includes('gas.png')){
+                        push()                        
+                    }
+                    break 
+                default:
+                    break
+            }
+        })
+
+    } catch(e) {
+        console.log(e)
+        console.error('Error while fetching data from Chipo')
+    }
+    return fuel_stations
+}

@@ -16,7 +16,9 @@ export enum URLS {
     SHELL = "/api/shell",
     SHELL_API = "https://shellgsllocator.geoapp.me/api/v1/locations/nearest_to?autoload=true&travel_mode=driving&avoid_tolls=false&avoid_highways=false&avoid_ferries=false&corridor_radius=5&driving_distances=false&format=json",
     MOTTO = "/api/motto",
-    MOTTO_API = "https://motto.ua/azs/tmp.xml"
+    MOTTO_API = "https://motto.ua/azs/tmp.xml",
+    CHIPO = "/api/chipo",
+    CHIPO_API = "https://chipo.ua/uk/network/"
 }
 
 export default URLS

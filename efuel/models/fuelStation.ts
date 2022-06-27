@@ -7,6 +7,7 @@ import { PointItem as BrsmStation } from './brsm'
 import { AmicStation } from './amic'
 import { Shell } from './shell'
 import { Marker as Motto } from './motto'
+import { Location as Chipo } from './chipo'
 
 
 export enum Brands {
@@ -18,11 +19,12 @@ export enum Brands {
     Brsm = "БРСМ-Нафта",
     Amic = "AMIC Energy",
     Shell = "Shell",
-    Motto = "Motto"
+    Motto = "Motto",
+    Chipo = "Chipo",
 }
 
 export default class FuelStation {
-    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation | Shell | Motto) {
+    constructor(station: OKKO_station | WogStation | SocarStation | UkrnaftaStation | UpgStation | BrsmStation | AmicStation | Shell | Motto | Chipo) {
         this.brand = "";
         this.name = "";
         this.address = "";
@@ -48,6 +50,8 @@ export default class FuelStation {
             this.fromShell(station as Shell)
         } else if(this.isMotto()) {
             this.fromMotto(station as Motto)
+        } else if(this.isChipo()) {
+            this.fromChipo(station as Chipo)
         }
 
     }
@@ -68,6 +72,7 @@ export default class FuelStation {
     private isAmic = () => this._stationRaw.hasOwnProperty('icons')
     private isShell = () => this._stationRaw.hasOwnProperty('open_status')
     private isMotto = () => this._stationRaw.hasOwnProperty('toplivo')
+    private isChipo = () => this._stationRaw.hasOwnProperty('cssClass')
 
     private fromOkko(station: OKKO_station) {
         this.brand = Brands.Okko;
@@ -151,6 +156,17 @@ export default class FuelStation {
         this.location = { lat: Number.parseFloat(station.lat), lon: Number.parseFloat(station.lng) };
         this.fuelTypesAvailable = station.toplivo;
 
+    }
+
+    private fromChipo(station: Chipo){
+        this.brand = Brands.Chipo;
+        this.name = station.title;
+        // this.address = station.description.substring(station.description.indexOf('<p>'), station.description.indexOf('</p>'));
+        this.address = station.title;
+        this.location = { 
+            lat: Number.parseFloat(station.latitude),
+            lon: Number.parseFloat(station.longitude)
+         };
     }
 }
 

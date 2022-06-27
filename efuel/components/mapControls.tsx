@@ -94,7 +94,14 @@ const MapControls = (props: FuelMapProps) => {
           icon.className = styles.locateButtonIcon
           icon.src = '/locate.png'
           showLocationButton.append(icon)
-          showLocationButton.addEventListener('click', () => map.locate({ setView: true, maxZoom: 14 }))
+          showLocationButton.addEventListener('click', () => {
+            map.locate({ setView: true, maxZoom: 14 })
+            if(navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition((position) => {
+                props.onChangeLocation({ lat: position.coords.latitude, lon: position.coords.longitude })
+              })
+            }
+          })
 
           return showLocationButton
         }
