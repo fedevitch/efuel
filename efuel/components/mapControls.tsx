@@ -58,8 +58,9 @@ const MapControls = (props: FuelMapProps) => {
           const rangeInput = L.DomUtil.create('input', styles.rangeInput)
           rangeInput.id = 'rangeInput'
           rangeInput.type = 'number'
-          rangeInput.max = '30'
-          rangeInput.min = '1'
+          rangeInput.max = '50'
+          rangeInput.min = '5'
+          rangeInput.step = '5'
           rangeInput.value = Latitude(props.range).toString()
           rangeInput.addEventListener('change', 
                                       () => props.onChangeRange(AngleLatitude(Number.parseFloat(rangeInput.value))))
