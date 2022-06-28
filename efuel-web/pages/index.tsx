@@ -1,34 +1,75 @@
 import type { NextPage } from 'next'
-import { useEffect, useState } from 'react'
+import Head from 'next/head'
+import { useEffect, useState, Fragment } from 'react'
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
 const Map = dynamic(
   () => import('../components/map'),
   { ssr: false }
 )
-import FuelStation, {Coordinates, FuelTypes} from '../models/fuelStation'
-import { fetchOkko, fetchSocar, fetchUkrnafta, fetchWog } from '../components/requests'
+import defaultParams from '../components/defaultParams'
+import FuelStation from '../models/fuelStation'
+import { 
+  fetchOkko, fetchSocar, fetchUkrnafta, fetchWog, 
+  fetchUpg, fetchBrsm, fetchAmic, fetchShell, fetchMotto, fetchChipo } from '../components/requests'
 
 
 const Home: NextPage = () => {
 
-  const [range, setRange] = useState(0.044988888)
-  const [location, setLocation] = useState({ lat: 49.840762, lon: 24.0291513} as Coordinates)
-  const [fuelType, setFuelType] = useState(FuelTypes.A95)
+  const [isLoading, setIsLoading] = useState(false)
+  const [status, setStatus] = useState("Готово")
+  const [progress, setProgress] = useState(0)
 
-  const [stations, setStations] = useState([] as Array<FuelStation>);
+  const [range, setRange] = useState(defaultParams.RANGE_R)
+  const [location, setLocation] = useState(defaultParams.LOCATION)
+  const [fuelType, setFuelType] = useState(defaultParams.FUEL_TYPE)
+
+  const [okko, setOkko] = useState([] as Array<FuelStation>)
+  const [wog, setWog] = useState([] as Array<FuelStation>)
+  const [socar, setSocar] = useState([] as Array<FuelStation>)
+  const [ukrnafta, setUkrnafta] = useState([] as Array<FuelStation>)
+  const [upg, setUpg] = useState([] as Array<FuelStation>)
+  const [brsm, setBrsm] = useState([] as Array<FuelStation>)
+  const [amic, setAmic] = useState([] as Array<FuelStation>)
+  const [shell, setShell] = useState([] as Array<FuelStation>)
+  const [motto, setMotto] = useState([] as Array<FuelStation>)
+  const [chipo, setChipo] = useState([] as Array<FuelStation>)
+
+  const stations = [...okko, ...wog, ...socar, ...ukrnafta, ...upg, ...brsm, ...amic, ...shell, ...motto, ...chipo]
+  const stationsUnflattened = [okko, wog, socar, ukrnafta, upg, brsm, amic, shell, motto, chipo]
+
+  const getStationData = async (getter: Promise<Array<FuelStation>>, statusStart: string, statusEnd: string): Promise<Array<FuelStation>> => {
+    setStatus(statusStart)
+    const fuelStations = await getter
+    setStatus(statusEnd)
+    return fuelStations
+  }
 
   const getStations = async () => {
     const params = { range, location, fuelType }
-    const [okko, wog, socar, ukrnafta] = await Promise.all([
-      fetchOkko(params),
-      fetchWog(params),
-      fetchSocar(params),
-      fetchUkrnafta(params)
+    setIsLoading(true)
+    setProgress(0)
+    await Promise.all([
+      getStationData(fetchOkko(params), "Дзвонимо на ОККО", "OKKO: Готово").then(setOkko),
+      getStationData(fetchWog(params), "Питаємся у WOG", "WOG: Готово").then(setWog),
+      getStationData(fetchSocar(params), "Набираємо Socar", "Socar: Готово").then(setSocar),
+      getStationData(fetchUkrnafta(params), "Завантажується Укрнафта", "Укрнафта завантажилась").then(setUkrnafta),
+      getStationData(fetchUpg(params), "Йдемо до Upg", "Upg - Є!").then(setUpg),
+      getStationData(fetchBrsm(params), "Качаємо в БРСМ-Нафта", "БРСМ-Нафта скачалась").then(setBrsm),
+      getStationData(fetchAmic(params), "AMIC - старт", "AMIC - готово").then(setAmic),
+      getStationData(fetchShell(params), "Calling Shell", "Shell - OK").then(setShell),
+      getStationData(fetchMotto(params), "Мотто: врум-врумм", "Мотто ОК").then(setMotto),
+      getStationData(fetchChipo(params), "Чіпаємо Chipo", "Chipo - OK").then(setChipo)
     ])
-    setStations([...okko, ...wog, ...socar, ...ukrnafta])
-    
+    setIsLoading(false) 
+    setStatus("Готово")
+    setProgress(100)
   }
+
+  useEffect(() => {
+    const value = progress + 100/(stationsUnflattened.length)
+    setProgress(value > 100 ? 100 : value)
+  }, [stations.length])
 
   useEffect(() => {
     if(navigator.geolocation) {
@@ -43,13 +84,50 @@ const Home: NextPage = () => {
   }, [range, location.lat, location.lon, fuelType])
 
   return (
-    <div>
-      <title>єПаливо</title>
-      <Map location={location} stations={stations} range={range}
+    <Fragment>
+      <Head>
+        <title>єПаливо</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />        
+        {PWAHeadMeta}
+      </Head>
+      <Map location={location} stations={stations} range={range} isLoading={isLoading} status={{message: status, progress}}
               onChangeFuelType={setFuelType} 
               onChangeRange={setRange} 
               onChangeLocation={setLocation}/>
-    </div>)
+    </Fragment>)
 }
 
 export default Home
+
+const PWAHeadMeta = (
+  <Fragment>
+    <meta name='application-name' content='єПаливо' />
+    <meta name='apple-mobile-web-app-capable' content='yes' />
+    <meta name='apple-mobile-web-app-status-bar-style' content='default' />
+    <meta name='apple-mobile-web-app-title' content='єПаливо' />
+    <meta name='description' content='Швидко дізнатися яке паливо у наявності поблизу' />
+    <meta name='format-detection' content='telephone=no' />
+    <meta name='mobile-web-app-capable' content='yes' />
+    <meta name='msapplication-config' content='/icons/browserconfig.xml' />
+    <meta name='msapplication-TileColor' content='#2B5797' />
+    <meta name='msapplication-tap-highlight' content='no' />
+    <meta name='theme-color' content='#000000' />
+
+    <link rel='apple-touch-icon' href='/icons/touch-icon-iphone.png' />
+    <link rel='apple-touch-icon' sizes='152x152' href='/icons/touch-icon-ipad.png' />
+    <link rel='apple-touch-icon' sizes='180x180' href='/icons/touch-icon-iphone-retina.png' />
+    <link rel='apple-touch-icon' sizes='167x167' href='/icons/touch-icon-ipad-retina.png' />
+
+    <link rel='icon' type='image/png' sizes='32x32' href='/icons/favicon-32x32.png' />
+    <link rel='icon' type='image/png' sizes='16x16' href='/icons/favicon-16x16.png' />
+    <link rel='manifest' href='/manifest.json' />
+    <link rel='mask-icon' href='/icons/safari-pinned-tab.svg' color='#5bbad5' />
+    <link rel='shortcut icon' href='/favicon.ico' />
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
+        
+    <meta property='og:type' content='website' />
+    <meta property='og:title' content='єПаливо' />
+    <meta property='og:description' content='Перевірити наявність палива поблизу' />
+    <meta property='og:site_name' content='efuel' />
+  </Fragment>
+)

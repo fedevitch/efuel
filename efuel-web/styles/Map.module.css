@@ -1,26 +1,65 @@
-.container {
-  width: 100%;
-  height: 100%;
-  overflow-y: hidden;
-}
-
 .map {
   width: 100%;
-  height: 1000px;
+  height: 100%;
+}
+
+@media (pointer:none), (pointer:coarse) {
+  .map {
+    height: calc(100% - 55px);
+  }
+}
+
+@media all and (display-mode: standalone) {
+  /* Here goes the CSS rules that will only apply if app is running standalone */
+  .map {
+    height: 100%;
+  }
+}
+
+.stationPopupContainer {
+  width: 100%;
 }
 
 .controlContainer {
   display: flex;
   flex-direction: column;
   z-index: -1;
+  font-size: larger;
 }
 
 .fuelSelect {
   width: 6rem;
   z-index: -1;
+  border: 2px solid rgba(0,0,0,0.2);
+  background-color: #fff;
 }
 
 .rangeInput {
   width: 4rem;
   z-index: -1;
+  border: 2px solid rgba(0,0,0,0.2);
+  background-color: #fff;
+}
+
+.locationSearch {
+  height: 1.9rem !important;
+}
+
+.locateButton {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.2);
+  box-shadow: 0 5px #999;
+}
+
+.locateButton:active {
+  background-color: #c9c9c9;
+  box-shadow: 0 1px rgb(141, 141, 141);
+  transform: translateY(4px);
+}
+
+.locateButtonIcon {
+  height: 2rem;
+  width: 2rem;
 }
