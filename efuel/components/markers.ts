@@ -52,9 +52,9 @@ const brsmMarker = new L.Icon({
 const amicMarker = new L.Icon({
   iconUrl: 'amic.svg',
   iconRetinaUrl: 'amic.svg',
-  iconSize: new L.Point(45, 55),
+  iconSize: new L.Point(30, 45),
   shadowUrl: 'marker-shadow.png',
-  shadowAnchor: new L.Point(18, 22)
+  shadowAnchor: new L.Point(10, 20)
 })
 
 const shellMarker = new L.Icon({

@@ -186,3 +186,14 @@ const R = 6371
 
 export const AngleLatitude = (Latitude: number):number => (360 * Latitude) / (2 * Math.PI * R)
 export const Latitude = (AngleLatitude: number):number => Math.round((2 * Math.PI * R * AngleLatitude) / 360)
+
+export const isInRange = (range:number, point1: Coordinates, point2: Coordinates):boolean => {
+    const distance = Math.sqrt(Math.pow(point1.lat - point2.lat, 2) + Math.pow(point1.lon - point2.lon, 2))
+    return range >= distance
+}
+
+export interface FetchParams {
+    range: number,
+    location: Coordinates, 
+    fuelType: FuelTypes
+}

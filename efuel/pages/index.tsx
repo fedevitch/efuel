@@ -56,7 +56,7 @@ const Home: NextPage = () => {
       getStationData(fetchUkrnafta(params), "Завантажується Укрнафта", "Укрнафта завантажилась").then(setUkrnafta),
       getStationData(fetchUpg(params), "Йдемо до Upg", "Upg - Є!").then(setUpg),
       getStationData(fetchBrsm(params), "Качаємо в БРСМ-Нафта", "БРСМ-Нафта скачалась").then(setBrsm),
-      // getStationData(fetchAmic(params), "AMIC - старт", "AMIC - готово").then(setAmic),
+      getStationData(fetchAmic(params), "AMIC - старт", "AMIC - готово").then(setAmic),
       getStationData(fetchShell(params), "Calling Shell", "Shell - OK").then(setShell),
       getStationData(fetchMotto(params), "Мотто: врум-врумм", "Мотто ОК").then(setMotto),
       getStationData(fetchChipo(params), "Чіпаємо Chipo", "Chipo - OK").then(setChipo)
@@ -67,7 +67,7 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    const value = progress + 100/(stationsUnflattened.length - 1)
+    const value = progress + 100/(stationsUnflattened.length)
     setProgress(value > 100 ? 100 : value)
   }, [stations.length])
 

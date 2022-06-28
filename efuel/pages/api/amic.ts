@@ -22,14 +22,9 @@ export default async function handler(
                         console.log(err)                
                         reject(err)
                     })
-                    console.log(apiResponse.headers, apiResponse.read())
                     let data = ""
-                    apiResponse.on('data', chunk => {
-                        console.log('data', data)
-                        data += chunk
-                    })                    
+                    apiResponse.on('data', chunk => data += chunk)                    
                     apiResponse.on('end', () => {
-                        console.log('end', data.substring(0,100))
                         res.status(200).end(data)               
                         resolve(200)
                     })

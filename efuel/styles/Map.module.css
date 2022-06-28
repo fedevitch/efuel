@@ -7,19 +7,13 @@
   .map {
     height: calc(100% - 55px);
   }
-
-  .stationPopup {
-    /* width: 98vw; */
-
-  }
-
-  .stationPopupContainer {    
-    /*   */
-  }
 }
 
-.stationPopup {
-    
+@media all and (display-mode: standalone) {
+  /* Here goes the CSS rules that will only apply if app is running standalone */
+  .map {
+    height: 100%;
+  }
 }
 
 .stationPopupContainer {
