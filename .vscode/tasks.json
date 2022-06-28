@@ -4,7 +4,7 @@
 		{
 			"type": "npm",
 			"script": "build",
-			"path": "efuel",
+			"path": "efuel-web",
 			"group": "build",
 			"problemMatcher": [],
 			"label": "npm: build - efuel",
@@ -13,7 +13,7 @@
 		{
 			"type": "npm",
 			"script": "dev",
-			"path": "efuel",
+			"path": "efuel-web",
 			"problemMatcher": [],
 			"label": "npm: dev - efuel",
 			"detail": "next dev"
