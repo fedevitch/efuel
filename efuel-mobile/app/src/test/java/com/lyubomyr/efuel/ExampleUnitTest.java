@@ -1,4 +1,4 @@
-package com.example.efuel;
+package com.lyubomyr.efuel;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.efuel.ui.gallery;
+package com.lyubomyr.efuel.ui.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.efuel.databinding.FragmentGalleryBinding;
+import com.lyubomyr.efuel.databinding.FragmentGalleryBinding;
 
 public class GalleryFragment extends Fragment {
 

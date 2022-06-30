@@ -1,4 +1,4 @@
-package com.example.efuel.ui.gallery;
+package com.lyubomyr.efuel.ui.gallery;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

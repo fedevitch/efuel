@@ -1,4 +1,4 @@
-package com.example.efuel.ui.home;
+package com.lyubomyr.efuel.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.efuel.databinding.FragmentHomeBinding;
+import com.lyubomyr.efuel.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 

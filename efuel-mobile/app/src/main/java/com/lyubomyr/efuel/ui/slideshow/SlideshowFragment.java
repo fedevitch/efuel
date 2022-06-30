@@ -1,4 +1,4 @@
-package com.example.efuel.ui.slideshow;
+package com.lyubomyr.efuel.ui.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.efuel.databinding.FragmentSlideshowBinding;
+import com.lyubomyr.efuel.databinding.FragmentSlideshowBinding;
 
 public class SlideshowFragment extends Fragment {
 

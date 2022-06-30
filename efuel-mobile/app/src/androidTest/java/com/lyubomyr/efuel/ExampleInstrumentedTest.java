@@ -1,4 +1,4 @@
-package com.example.efuel;
+package com.lyubomyr.efuel;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.efuel", appContext.getPackageName());
+        assertEquals("com.lyubomyr.efuel", appContext.getPackageName());
     }
 }

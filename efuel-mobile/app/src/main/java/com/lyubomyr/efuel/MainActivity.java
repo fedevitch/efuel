@@ -1,6 +1,7 @@
-package com.example.efuel;
+package com.lyubomyr.efuel;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 
@@ -14,7 +15,14 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.efuel.databinding.ActivityMainBinding;
+import com.lyubomyr.efuel.data.DataAggregator;
+import com.lyubomyr.efuel.data.api.Socar.SocarService;
+import com.lyubomyr.efuel.data.models.Socar.Socar;
+import com.lyubomyr.efuel.databinding.ActivityMainBinding;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Socar socarStations = SocarService.getInstance().GetStations();
+        Log.d("Main activity", socarStations.getData().get(0).getAttributes().getAddress());
+
     }
 
     @Override
