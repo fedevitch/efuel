@@ -56,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        Socar socarStations = SocarService.getInstance().GetStations();
-        Log.d("Main activity", socarStations.getData().get(0).getAttributes().getAddress());
+        DataAggregator.getInstance().FetchData();
 
     }
 

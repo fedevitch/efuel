@@ -1,8 +1,9 @@
-package com.lyubomyr.efuel.data.api.Socar;
+package com.lyubomyr.efuel.data.api.Okko;
 
 import android.util.Log;
 
 import com.lyubomyr.efuel.Constants.AppConstants;
+import com.lyubomyr.efuel.data.models.Okko.Okko;
 import com.lyubomyr.efuel.data.models.Socar.Socar;
 
 import java.util.concurrent.Callable;
@@ -16,31 +17,29 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class SocarService {
-    SocarService(){
+public class OkkoService {
+    OkkoService(){
         pool = Executors.newCachedThreadPool();
 
         requestProvider = new Retrofit.Builder()
-                .baseUrl(AppConstants.SocarBaseUrl)
+                .baseUrl(AppConstants.OkkoBaseUrl)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
-        apiService = requestProvider.create(ISocarAPI.class);
-
+        apiService = requestProvider.create(IOkkoAPI.class);
     }
-    private static SocarService INSTANCE;
-    private final String LOG_TAG = "Socar API service";
+    private static OkkoService INSTANCE;
+    private final String LOG_TAG = "Okko API service";
     private final Retrofit requestProvider;
-    private final ISocarAPI apiService;
+    private final IOkkoAPI apiService;
     private final ExecutorService pool;
 
-
-    private Socar sendRequest(){
+    private Okko sendRequest(){
         try {
-            Call<Socar> apiRequest = apiService.getStationsData();
-            Response<Socar> response = apiRequest.execute();
+            Call<Okko> apiRequest = apiService.getStationsData();
+            Response<Okko> response = apiRequest.execute();
             Log.d(LOG_TAG, String.valueOf(response.code()));
             if(response.body() != null) {
-                Log.d(LOG_TAG, String.valueOf(response.body().getData().size()));
+                Log.d(LOG_TAG, String.valueOf(response.body().getCollection().size()));
                 return response.body();
             } else {
                 Log.d(LOG_TAG, "body null");
@@ -52,10 +51,10 @@ public class SocarService {
         }
         return null;
     }
-    private final Callable<Socar> r = this::sendRequest;
+    private final Callable<Okko> r = this::sendRequest;
 
-    public Socar GetStations(){
-        Future<Socar> data = pool.submit(r);
+    public Okko GetStations(){
+        Future<Okko> data = pool.submit(r);
 
         try {
             return data.get();
@@ -67,10 +66,10 @@ public class SocarService {
         return null;
     }
 
-    public static SocarService getInstance(){
+    public static OkkoService getInstance(){
         if(INSTANCE == null){
-            synchronized (SocarService.class){
-                INSTANCE = new SocarService();
+            synchronized (OkkoService.class){
+                INSTANCE = new OkkoService();
             }
         }
 

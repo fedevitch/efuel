@@ -1,23 +1,26 @@
 package com.lyubomyr.efuel.data;
 
-import com.lyubomyr.efuel.Constants.AppConstants;
-import com.lyubomyr.efuel.data.api.Socar.ISocarAPI;
+import android.util.Log;
 
-import retrofit2.Retrofit;
-import retrofit2.Retrofit.Builder;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import com.lyubomyr.efuel.Constants.AppConstants;
+import com.lyubomyr.efuel.data.api.Okko.OkkoService;
+import com.lyubomyr.efuel.data.api.Socar.SocarService;
+import com.lyubomyr.efuel.data.models.Okko.Okko;
+import com.lyubomyr.efuel.data.models.Socar.Socar;
+
+import java.util.List;
+
 
 public class DataAggregator {
     public DataAggregator(){
-        SocarAPIInstance = new Builder()
-                .baseUrl(AppConstants.SocarBaseUrl)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .build();
-        SocarApi = SocarAPIInstance.create(ISocarAPI.class);
+        socarService = SocarService.getInstance();
+        okkoService = OkkoService.getInstance();
+
     }
 
-    public Retrofit SocarAPIInstance;
-    public ISocarAPI SocarApi;
+    private final String LOG_TAG = "Data aggregator";
+    private final SocarService socarService;
+    private final OkkoService okkoService;
 
     private static DataAggregator INSTANCE;
 
@@ -29,5 +32,13 @@ public class DataAggregator {
         }
 
         return INSTANCE;
+    }
+
+    public void FetchData() {
+        Socar socarStations = socarService.GetStations();
+        Log.d(LOG_TAG, socarStations.getData().get(0).getAttributes().getAddress());
+
+//        Okko okkoStations = okkoService.GetStations();
+//        Log.d(LOG_TAG, okkoStations.getCollection().get(0).getAttributes().getNaselenyyPunkt());
     }
 }
