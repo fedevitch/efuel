@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.lyubomyr.efuel.Constants.AppConstants;
 import com.lyubomyr.efuel.data.models.Okko.Okko;
-import com.lyubomyr.efuel.data.models.Socar.Socar;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +32,7 @@ public class OkkoService {
     private final IOkkoAPI apiService;
     private final ExecutorService pool;
 
+    // not working due to their api restrictions
     private Okko sendRequest(){
         try {
             Call<Okko> apiRequest = apiService.getStationsData();
@@ -51,10 +51,20 @@ public class OkkoService {
         }
         return null;
     }
-    private final Callable<Okko> r = this::sendRequest;
+    // private final Callable<Okko> r = this::sendRequest;
+    private String parseData(){
+        try {
+            return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    public Okko GetStations(){
-        Future<Okko> data = pool.submit(r);
+        return null;
+    }
+    private final Callable<String> r = this::parseData;
+
+    public String GetStations(){
+        Future<String> data = pool.submit(r);
 
         try {
             return data.get();

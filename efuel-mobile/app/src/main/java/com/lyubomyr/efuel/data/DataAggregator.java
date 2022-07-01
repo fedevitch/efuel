@@ -8,9 +8,6 @@ import com.lyubomyr.efuel.data.api.Socar.SocarService;
 import com.lyubomyr.efuel.data.models.Okko.Okko;
 import com.lyubomyr.efuel.data.models.Socar.Socar;
 
-import java.util.List;
-
-
 public class DataAggregator {
     public DataAggregator(){
         socarService = SocarService.getInstance();
@@ -38,7 +35,7 @@ public class DataAggregator {
         Socar socarStations = socarService.GetStations();
         Log.d(LOG_TAG, socarStations.getData().get(0).getAttributes().getAddress());
 
-//        Okko okkoStations = okkoService.GetStations();
-//        Log.d(LOG_TAG, okkoStations.getCollection().get(0).getAttributes().getNaselenyyPunkt());
+        String okkoStations = okkoService.GetStations();
+        Log.d(LOG_TAG, okkoStations);
     }
 }
