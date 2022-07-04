@@ -14,17 +14,17 @@ const parseSocar = (data: SocarStations, params: FetchParams) => {
                     }
                     switch(params.fuelType){                
                         case FuelTypes.A95:
-                            if(station.attributes.fuelPrices.some(price => price.includes('NANO 95') || price.includes('A95'))){
+                            if(station.attributes.fuelPrices.some(price => price.name.includes('NANO 95') || price.name.includes('A95'))){
                                 push()                        
                             }
                             break
                         case FuelTypes.DIESEL:
-                            if(station.attributes.fuelPrices.some(price => price.includes('NANO ДП') || price.includes('Diesel'))){
+                            if(station.attributes.fuelPrices.some(price => price.name.includes('NANO ДП') || price.name.includes('Diesel'))){
                                 push()                        
                             }
                             break 
                         case FuelTypes.LPG:
-                            if(station.attributes.fuelPrices.some(price => price.includes('LPG'))){
+                            if(station.attributes.fuelPrices.some(price => price.name.includes('LPG'))){
                                 push()                        
                             }
                             break 

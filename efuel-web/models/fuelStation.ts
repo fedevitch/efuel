@@ -97,7 +97,7 @@ export default class FuelStation {
         this.name = station.title;
         this.address = station.address;
         this.location = { lat: station.marker.lat, lon: station.marker.lng };
-        this.fuelTypesAvailable = station.fuelPrices.join(',');
+        this.fuelTypesAvailable = station.fuelPrices.map(price => `${price.name}: ${price.price} ${price.limit ? `(${price.limit})` : ''}`).join(',');
     }
 
     private fromUkrnafta(station: UkrnaftaStation){

@@ -28,14 +28,17 @@ export enum CitySlug {
     Odessa = "odessa",
 }
 
-export enum FuelPrice {
-    AdBlue3190 = "AdBlue (31.90)",
-    AdBlue3299 = "AdBlue (32.99)",
-    DieselNanoExtro000 = "Diesel Nano Extro (0.00)",
-    DieselNanoExtro5799 = "Diesel Nano Extro (57.99)",
-    Lpg4198 = "LPG (41.98)",
-    Nano955199 = "NANO 95 (51.99)",
-    NanoДп5699 = "NANO ДП (56.99)",
+export interface FuelPrice {
+    // AdBlue3190 = "AdBlue (31.90)",
+    // AdBlue3299 = "AdBlue (32.99)",
+    // DieselNanoExtro000 = "Diesel Nano Extro (0.00)",
+    // DieselNanoExtro5799 = "Diesel Nano Extro (57.99)",
+    // Lpg4198 = "LPG (41.98)",
+    // Nano955199 = "NANO 95 (51.99)",
+    // NanoДп5699 = "NANO ДП (56.99)",
+    limit: string;
+    name: string;
+    price: string;
 }
 
 export interface Marker {
