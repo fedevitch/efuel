@@ -88,7 +88,7 @@ const Home: NextPage = () => {
       <Head>
         <title>єПаливо</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />        
-        {PWAHeadMeta}
+        <PWAHeadMeta />
       </Head>
       <Map location={location} stations={stations} range={range} isLoading={isLoading} status={{message: status, progress}}
               onChangeFuelType={setFuelType} 
@@ -99,7 +99,7 @@ const Home: NextPage = () => {
 
 export default Home
 
-const PWAHeadMeta = (
+const PWAHeadMeta = () => (
   <Fragment>
     <meta name='application-name' content='єПаливо' />
     <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -110,7 +110,7 @@ const PWAHeadMeta = (
     <meta name='mobile-web-app-capable' content='yes' />    
     <meta name='msapplication-TileColor' content='#2B5797' />
     <meta name='msapplication-tap-highlight' content='no' />
-    <meta name='theme-color' content='#000000' />
+    <meta name='theme-color' content='#ddd' />
 
     <link rel='apple-touch-icon' href='/public/efuel.png' />
     <link rel='apple-touch-icon' sizes='152x152' href='/efuel_152x152.png' />
