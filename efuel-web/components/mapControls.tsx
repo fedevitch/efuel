@@ -129,7 +129,7 @@ const MapControls = (props: FuelMapProps) => {
   
     useEffect(() => {
       map.setView([props.location.lat, props.location.lon])
-    }, [props.location.lat, props.location.lon])
+    }, [props.location.lat, props.location.lon]) // eslint-disable-line react-hooks/exhaustive-deps
   
     useEffect(() => {
       map.addControl(searchControl)
@@ -141,7 +141,7 @@ const MapControls = (props: FuelMapProps) => {
       rangeInput.addTo(map)
       const locationButton = createShowMyLocationButton()
       locationButton.addTo(map)         
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
       const fuelSelect = document.getElementById('fuelSelect')

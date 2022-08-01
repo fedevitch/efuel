@@ -1,6 +1,6 @@
 {
   "name": "efuel",
-  "version": "0.1.12",
+  "version": "0.1.14",
   "private": true,
   "engines": {
     "node": ">=16.15.1 <=18.3.0",
@@ -13,16 +13,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/xml2js": "^0.4.11",
-    "form-data": "^4.0.0",
-    "leaflet-geosearch": "^3.6.1",
+    "@types/xml2js": "0.4.11",
+    "form-data": "4.0.0",
+    "leaflet-geosearch": "3.6.1",
     "next": "12.1.6",
-    "next-pwa": "^5.5.4",
-    "node_extra_ca_certs_mozilla_bundle": "^1.0.5",
+    "next-pwa": "5.5.4",
+    "node_extra_ca_certs_mozilla_bundle": "1.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-leaflet": "^4.0.0",
-    "xml2js": "^0.4.23"
+    "react-leaflet": "4.0.0",
+    "xml2js": "0.4.23"
   },
   "devDependencies": {
     "@types/leaflet": "^1.7.11",

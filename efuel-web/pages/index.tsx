@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState, Fragment, useCallback } from 'react'
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
 const Map = dynamic(
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
     return fuelStations
   }
 
-  const getStations = async () => {
+  const getStations = useCallback(async () => {
     const params = { range, location, fuelType }
     setIsLoading(true)
     setProgress(0)
@@ -64,12 +64,12 @@ const Home: NextPage = () => {
     setIsLoading(false) 
     setStatus("Готово")
     setProgress(100)
-  }
+  }, [range, location, fuelType])
 
   useEffect(() => {
     const value = progress + 100/(stationsUnflattened.length)
     setProgress(value > 100 ? 100 : value)
-  }, [stations.length])
+  }, [stations.length, stationsUnflattened.length, progress])
 
   useEffect(() => {
     if(navigator.geolocation) {
@@ -81,7 +81,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {    
     getStations()
-  }, [range, location.lat, location.lon, fuelType])
+  }, [getStations])
 
   return (
     <Fragment>
@@ -121,7 +121,6 @@ const PWAHeadMeta = () => (
     <link rel='icon' type='image/png' sizes='16x16' href='/efuel_16x16.png' />
     <link rel='manifest' href='/manifest.json' />    
     <link rel='shortcut icon' href='/favicon.ico' />
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
         
     <meta property='og:type' content='website' />
     <meta property='og:title' content='єПаливо' />

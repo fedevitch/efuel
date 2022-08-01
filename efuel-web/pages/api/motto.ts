@@ -18,7 +18,8 @@ export default async function handler(
               apiResponse.on('end', () => {
                   res.status(200).end(data)                
                   resolve(200)
-              })            
+              })
+              apiResponse.on('error', reject)            
             })
           })
         } catch(e) {

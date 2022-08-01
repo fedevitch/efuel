@@ -17,6 +17,14 @@
 			"problemMatcher": [],
 			"label": "npm: dev - efuel",
 			"detail": "next dev"
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "efuel-web",
+			"problemMatcher": [],
+			"label": "npm: start - efuel-web",
+			"detail": "next start"
 		}
 	]
 }

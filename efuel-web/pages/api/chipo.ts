@@ -26,7 +26,8 @@ export default async function handler(
                                 .replace(';', '')
                 res.status(200).end(data)                
                 resolve(200)
-              })            
+              })
+              apiResponse.on('error', reject)            
             })
           })
         } catch(e) {

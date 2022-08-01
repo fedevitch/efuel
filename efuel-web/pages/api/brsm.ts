@@ -14,7 +14,8 @@ const callAjaxHandler = (action: string):Promise<string> => new Promise((resolve
         apiResponse.on('data', chunk => data += chunk)
         apiResponse.on('end', () => {            
             resolve(data)
-        })            
+        })
+        apiResponse.on('error', reject)            
     })
 })
 

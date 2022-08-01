@@ -31,7 +31,8 @@ export default async function handler(
                     apiResponse.on('error', (e) => {
                         console.error(e)
                         reject(e)
-                    })            
+                    })
+                    apiResponse.on('error', reject)            
                 })
             })
         } catch (e) {
